@@ -77,7 +77,7 @@ public class Battle_Card : BattleCommand
     public void Sort_Card()
     {
         List<PRS> originCardPRS = new List<PRS>();
-        originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count);
+        originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count, 1f);
 
         for(int i = 0; i < battleManager.cardDatasTemp.Count; i++)
         {
@@ -87,24 +87,40 @@ public class Battle_Card : BattleCommand
         }
     }
 
-    private List<PRS> Return_RoundPRS(int objCount)
+    private List<PRS> Return_RoundPRS(int objCount, float height)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
 
-        float interbal = 1f / (objCount - 1 > 0 ? objCount - 1 : 1);
-        for(int i = 0; i < objCount; i++)
+        switch(objCount)
         {
-            objLerps[i] = interbal * i;
+            case 1:
+                objLerps = new float[] { 0.5f };
+                break;
+            case 2:
+                objLerps = new float[] { 0.27f, 0.77f };
+                break;
+            default:
+                float interbal = 1f / (objCount - 1 > 0 ? objCount - 1 : 1);
+                for (int i = 0; i < objCount; i++)
+                {
+                    objLerps[i] = interbal * i;
+                }
+                break;
         }
+
 
         for(int i = 0; i < objCount; i++)
         {
             Vector3 pos = Vector3.Lerp(card_LeftPosition.anchoredPosition, card_RightPosition.anchoredPosition, objLerps[i]);
             
-            float curve = Mathf.Sqrt(Mathf.Pow(0.5f,2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
-            pos.y += curve;
+            float curve = Mathf.Sqrt(Mathf.Pow(height, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
+            pos.y += curve * 800 - 600;
             Quaternion rot = Quaternion.Slerp(card_LeftPosition.rotation, card_RightPosition.rotation, objLerps[i]);
+            if (objCount <= 2)
+            {
+                rot = Quaternion.identity;
+            }
 
             results.Add(new PRS(pos, rot, Vector3.one));
         }
