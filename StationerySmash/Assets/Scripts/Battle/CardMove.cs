@@ -22,7 +22,7 @@ public class PRS
     }
 }
 
-public class CardMove : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
     private Image card_Background;
@@ -82,22 +82,6 @@ public class CardMove : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
                 break;
         }
     }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         battleManager.battle_Card.Check_MouseOver(this);
@@ -108,5 +92,15 @@ public class CardMove : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     {
         battleManager.battle_Card.Check_MouseExit(this);
         battleManager.battle_Card.Set_SizeCard(this, false);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        battleManager.battle_Card.Check_MouseDown(this);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        battleManager.battle_Card.Check_MouseUp(this);
     }
 }

@@ -161,13 +161,21 @@ public class Battle_Card : BattleCommand
     {
         Debug.Log("CardMouseExit");
     }
+    public void Check_MouseDown(CardMove card)
+    {
+        Debug.Log("CardMouseDown");
+    }
+    public void Check_MouseUp(CardMove card)
+    {
+        Debug.Log("CardMouseUp");
+    }
 
     public void Set_SizeCard(CardMove card , bool isSizeUp)
     {
         if(isSizeUp)
         {
-            Vector3 sizeUpPos = new Vector3(card.originPRS.pos.x, -4.8f, 0);
-            card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 2), 0.3f);
+            Vector3 sizeUpPos = new Vector3(card.originPRS.pos.x, -200f, -10);
+            card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 1.5f), 0.3f);
 
             return;
         }
