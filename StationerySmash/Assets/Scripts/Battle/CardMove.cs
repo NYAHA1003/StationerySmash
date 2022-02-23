@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
+
 
 [System.Serializable]
 public class PRS
@@ -20,7 +22,7 @@ public class PRS
     }
 }
 
-public class CardMove : MonoBehaviour
+public class CardMove : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField]
     private Image card_Background;
@@ -37,7 +39,13 @@ public class CardMove : MonoBehaviour
 
     private RectTransform rectTransform;
 
-    private void Awake() => rectTransform = GetComponent<RectTransform>();
+    private BattleManager battleManager;
+
+    private void Awake()
+    {
+        battleManager = FindObjectOfType<BattleManager>();
+        rectTransform = GetComponent<RectTransform>();
+    }
 
     public PRS originPRS;
 
@@ -75,4 +83,30 @@ public class CardMove : MonoBehaviour
         }
     }
 
+    public void OnDrag(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        battleManager.battle_Card.Check_MouseOver(this);
+        battleManager.battle_Card.Set_SizeCard(this, true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        battleManager.battle_Card.Check_MouseExit(this);
+        battleManager.battle_Card.Set_SizeCard(this, false);
+    }
 }
