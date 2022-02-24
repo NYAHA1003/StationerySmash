@@ -515,7 +515,7 @@ MonoBehaviour:
     cord: 0
     cost: 0
     name: 
-  grade: 0
+  grade: 1
   originPRS:
     pos: {x: 0, y: 0, z: 0}
     rot: {x: 0, y: 0, z: 0, w: 0}

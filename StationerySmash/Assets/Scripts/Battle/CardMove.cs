@@ -42,7 +42,8 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public UnitData unitData;
 
-    public int grade;
+    public int grade = 1;
+    public int id;
 
     private RectTransform rectTransform;
 
@@ -56,8 +57,9 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public PRS originPRS;
 
-    public void Set_UnitData(UnitData unitData)
+    public void Set_UnitData(UnitData unitData, int id)
     {
+        this.id = id;
         fusion_Effect.color = new Color(1, 1, 1, 1);
         fusion_Effect.DOFade(0, 0.8f);
         grade = 0;
@@ -109,13 +111,11 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         battleManager.battle_Card.Check_MouseOver(this);
-        battleManager.battle_Card.Set_SizeCard(this, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         battleManager.battle_Card.Check_MouseExit(this);
-        battleManager.battle_Card.Set_SizeCard(this, false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

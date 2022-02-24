@@ -18,6 +18,9 @@ public class Battle_Card : BattleCommand
 
     private Coroutine coroutine;
     private bool isDrow;
+    private bool isFusion;
+
+    private int idCount;
 
     public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition)
         : base(battleManager)
@@ -51,7 +54,7 @@ public class Battle_Card : BattleCommand
         cur_Card++;
 
         CardMove cardmove = Pool_Card();
-        cardmove.Set_UnitData(unitDataSO.unitDatas[random]);
+        cardmove.Set_UnitData(unitDataSO.unitDatas[random], idCount++);
         battleManager.cardDatasTemp.Add(cardmove);
 
         Sort_Card();
@@ -152,7 +155,6 @@ public class Battle_Card : BattleCommand
     /// </summary>
     private void Fusion_Card()
     {
-        Debug.Log("¿∂«’ »£√‚");
         if (isDrow) return;
         for (int i = 0; i < battleManager.cardDatasTemp.Count - 1; i++)
         {
@@ -162,7 +164,7 @@ public class Battle_Card : BattleCommand
                 {
                     coroutine = battleManager.StartCoroutine(Fusion_Move(i));
                     isDrow = true;
-                    Debug.Log(i + ", " + (i + 1) + " ¿∂«’");
+                    isFusion = true;
                     return;
                 }
             }
@@ -185,6 +187,8 @@ public class Battle_Card : BattleCommand
 
         battleManager.StopCoroutine(coroutine);
         coroutine = battleManager.StartCoroutine(Delay_Drow());
+
+        isFusion = false;
     }
 
     /// <summary>
@@ -218,7 +222,6 @@ public class Battle_Card : BattleCommand
             return;
 
         cur_Card--;
-        Debug.Log(index);
         battleManager.cardDatasTemp[index].transform.SetParent(card_PoolManager);
         battleManager.cardDatasTemp[index].gameObject.SetActive(false);
         battleManager.cardDatasTemp.RemoveAt(index);
@@ -241,18 +244,23 @@ public class Battle_Card : BattleCommand
 
     public void Check_MouseOver(CardMove card)
     {
+        if (isFusion) return;
         if (isDrow) return;
-        Debug.Log("CardMouseOver");
+        Set_SizeCard(card, true);
     }
     public void Check_MouseExit(CardMove card)
     {
+        if (isFusion) return;
         if (isDrow) return;
-        Debug.Log("CardMouseExit");
+        Set_SizeCard(card, false);
     }
     public void Check_MouseClick(CardMove card)
     {
+        if (isFusion) return;
         if (isDrow) return;
-        Debug.Log("Name : " + card.unitData.name + " PRS : " + card.originPRS + " Grade : " + card.grade + " Cost : " + card.unitData.cost);
+        Subtract_CardAt(battleManager.cardDatasTemp.FindIndex(x => x.id == card.id));
+        Debug.Log("ªË¡¶");
+        //Debug.Log("Id : " + card.id);
     }
 
     public void Set_SizeCard(CardMove card, bool isSizeUp)
