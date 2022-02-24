@@ -36,6 +36,9 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private TextMeshProUGUI card_GradeText;
     [SerializeField]
     private TextMeshProUGUI card_Name;
+    [SerializeField]
+    private Image fusion_Effect;
+
 
     public UnitData unitData;
 
@@ -55,6 +58,8 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void Set_UnitData(UnitData unitData)
     {
+        fusion_Effect.color = new Color(1, 1, 1, 1);
+        fusion_Effect.DOFade(0, 0.8f);
         grade = 0;
         this.unitData = unitData;
         card_Name.text = unitData.name;
@@ -116,5 +121,14 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         battleManager.battle_Card.Check_MouseClick(this);
+    }
+
+    public void Fusion_FadeInEffect()
+    {
+        fusion_Effect.DOFade(1, 0.3f);
+    }
+    public void Fusion_FadeOutEffect()
+    {
+        fusion_Effect.DOFade(0, 0.3f);
     }
 }

@@ -172,8 +172,14 @@ public class Battle_Card : BattleCommand
     private IEnumerator Fusion_Move(int index)
     {
         battleManager.cardDatasTemp[index + 1].Set_CardPosition(battleManager.cardDatasTemp[index].originPRS, 0.3f);
+        battleManager.cardDatasTemp[index].Fusion_FadeInEffect();
+        battleManager.cardDatasTemp[index + 1].Fusion_FadeInEffect();
+
         yield return new WaitForSeconds(0.3f);
+        
+        battleManager.cardDatasTemp[index].Fusion_FadeOutEffect();
         battleManager.cardDatasTemp[index].Upgrade_UnitGrade();
+        
         Subtract_CardAt(index + 1);
         Sort_Card();
 
