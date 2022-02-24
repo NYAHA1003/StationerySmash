@@ -55,14 +55,7 @@ public class Battle_Card : BattleCommand
         battleManager.cardDatasTemp.Add(cardmove);
 
         Sort_Card();
-
-        if(coroutine != null)
-        {
-            battleManager.StopCoroutine(coroutine);
-        }
-
-        isDrow = true;
-        coroutine = battleManager.StartCoroutine(Delay_Drow());
+        Fusion_DelayCard();
     }
 
     private IEnumerator Delay_Drow()
@@ -167,17 +160,39 @@ public class Battle_Card : BattleCommand
             {
                 if (battleManager.cardDatasTemp[i].grade == battleManager.cardDatasTemp[i + 1].grade)
                 {
-                    battleManager.cardDatasTemp[i].Upgrade_UnitGrade();
-                    Subtract_CardAt(i + 1);
-                    Sort_Card();
-
+                    coroutine = battleManager.StartCoroutine(Fusion_Move(i));
                     isDrow = true;
-                    coroutine = battleManager.StartCoroutine(Delay_Drow());
                     Debug.Log(i + ", " + (i + 1) + " 융합");
                     return;
                 }
             }
         }
+    }
+
+    private IEnumerator Fusion_Move(int index)
+    {
+        battleManager.cardDatasTemp[index + 1].Set_CardPosition(battleManager.cardDatasTemp[index].originPRS, 0.3f);
+        yield return new WaitForSeconds(0.3f);
+        battleManager.cardDatasTemp[index].Upgrade_UnitGrade();
+        Subtract_CardAt(index + 1);
+        Sort_Card();
+
+        battleManager.StopCoroutine(coroutine);
+        coroutine = battleManager.StartCoroutine(Delay_Drow());
+    }
+
+    /// <summary>
+    /// 카드를 뽑거나 제거하고 있을 때는 융합하지 않음
+    /// </summary>
+    private void Fusion_DelayCard()
+    {
+        if (coroutine != null)
+        {
+            battleManager.StopCoroutine(coroutine);
+        }
+
+        isDrow = true;
+        coroutine = battleManager.StartCoroutine(Delay_Drow());
     }
 
     /// <summary>
@@ -201,6 +216,9 @@ public class Battle_Card : BattleCommand
         battleManager.cardDatasTemp[index].transform.SetParent(card_PoolManager);
         battleManager.cardDatasTemp[index].gameObject.SetActive(false);
         battleManager.cardDatasTemp.RemoveAt(index);
+        Sort_Card();
+
+        Fusion_DelayCard();
     }
 
     /// <summary>
