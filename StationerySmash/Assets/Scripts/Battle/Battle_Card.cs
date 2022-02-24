@@ -268,8 +268,7 @@ public class Battle_Card : BattleCommand
         if (isSizeUp)
         {
             Vector3 sizeUpPos = new Vector3(card.originPRS.pos.x, -200f, -10);
-            card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 1.5f), 0.3f);
-
+            //card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 1.5f), 0.3f);
             return;
         }
         card.Set_CardPosition(card.originPRS, 0.3f);

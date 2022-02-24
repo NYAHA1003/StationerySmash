@@ -22,7 +22,7 @@ public class PRS
     }
 }
 
-public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     [SerializeField]
     private Image card_Background;
@@ -44,10 +44,13 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public int grade = 1;
     public int id;
+    private float scale;
 
     private RectTransform rectTransform;
 
     private BattleManager battleManager;
+
+    private Canvas cardCanvas;
 
     private void Awake()
     {
@@ -59,6 +62,8 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void Set_UnitData(UnitData unitData, int id)
     {
+        cardCanvas ??= transform.parent.GetComponent<Canvas>();
+        
         this.id = id;
         fusion_Effect.color = new Color(1, 1, 1, 1);
         fusion_Effect.DOFade(0, 0.8f);
@@ -70,11 +75,23 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Set_UnitGrade();
     }
 
-    public void Set_CardPosition(PRS prs, float duration)
+    public void Set_CardPosition(PRS prs, float duration, bool isDotween = true)
     {
-        rectTransform.DOAnchorPos(prs.pos, duration);
-        rectTransform.DORotateQuaternion(prs.rot, duration);
-        rectTransform.DOScale(prs.scale, duration);
+        if (isDotween)
+        {
+            rectTransform.DOAnchorPos(prs.pos, duration);
+            rectTransform.DORotateQuaternion(prs.rot, duration);
+            rectTransform.DOScale(prs.scale, duration);
+            return;
+        }
+        rectTransform.anchoredPosition = prs.pos;
+        rectTransform.rotation = prs.rot;
+        rectTransform.localScale = prs.scale;
+    }
+
+    public void Set_Size(float size, float duration)
+    {
+        rectTransform.DOScale(size, duration);
     }
 
     /// <summary>
@@ -108,21 +125,6 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Set_UnitGrade();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        battleManager.battle_Card.Check_MouseOver(this);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        battleManager.battle_Card.Check_MouseExit(this);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        battleManager.battle_Card.Check_MouseClick(this);
-    }
-
     public void Fusion_FadeInEffect()
     {
         fusion_Effect.DOFade(1, 0.3f);
@@ -130,5 +132,30 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void Fusion_FadeOutEffect()
     {
         fusion_Effect.DOFade(0, 0.3f);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        //Vector2 localPos;
+        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mouseScrollDelta, cardCanvas.worldCamera, out localPos);
+        //Set_CardPosition(new PRS(cardCanvas.transform.TransformPoint(localPos), Quaternion.identity, Vector3.one), 0, false);
+
+        transform.position = Input.mousePosition;
+        Set_Size(1.3f, 0.3f);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if(rectTransform.anchoredPosition.y > 0)
+        {
+            battleManager.battle_Card.Check_MouseClick(this);
+            Set_Size(1f, 0.3f);
+            return;
+        }
+
+        Set_CardPosition(originPRS, 0.3f);
+        Set_Size(1f, 0.3f);
+        battleManager.battle_Card.Check_MouseExit(this);
+
     }
 }
