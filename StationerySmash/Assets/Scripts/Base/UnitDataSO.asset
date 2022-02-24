@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: UnitDataSO
   m_EditorClassIdentifier: 
   unitDatas:
-  - cost: 1
-    grade: 1
+  - cord: 0
+    cost: 1
     name: "\uC5F0\uD544"
-  - cost: 2
-    grade: 2
+  - cord: 1
+    cost: 2
     name: "\uC9C0\uC6B0\uAC1C"
-  - cost: 3
-    grade: 3
+  - cord: 2
+    cost: 3
     name: "\uC0E4\uD504"

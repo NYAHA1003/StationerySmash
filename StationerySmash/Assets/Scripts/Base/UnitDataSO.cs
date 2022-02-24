@@ -14,7 +14,7 @@ public class UnitDataSO : ScriptableObject
 [System.Serializable]
 public class UnitData
 {
+    public int cord;
     public int cost;
-    public int grade;
     public string name;
 }

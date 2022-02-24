@@ -11,19 +11,17 @@ public class Battle_Card : BattleCommand
     private GameObject cardMove_Prefeb;
     private Transform card_PoolManager;
     private Transform card_Canvas;
-    private RectTransform card_Position;
     private RectTransform card_LeftPosition;
     private RectTransform card_RightPosition;
     private RectTransform card_SpawnPosition;
 
-    public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_Position, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition) 
+    public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition) 
         : base(battleManager) 
     {
         this.unitDataSO = unitDataSO;
         this.cardMove_Prefeb = card_Prefeb;
         this.card_PoolManager = card_PoolManager;
         this.card_Canvas = card_Canvas;
-        this.card_Position = card_Position;
         this.card_SpawnPosition = card_SpawnPosition;
         this.card_RightPosition = card_RightPosition;
         this.card_LeftPosition = card_LeftPosition;
@@ -77,7 +75,7 @@ public class Battle_Card : BattleCommand
     public void Sort_Card()
     {
         List<PRS> originCardPRS = new List<PRS>();
-        originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count, 1f);
+        originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count, 800, 600);
 
         for(int i = 0; i < battleManager.cardDatasTemp.Count; i++)
         {
@@ -85,9 +83,18 @@ public class Battle_Card : BattleCommand
             targetCard.originPRS = originCardPRS[i];
             targetCard.Set_CardPosition(targetCard.originPRS, 0.5f);
         }
+
+        Fusion_Card();
     }
 
-    private List<PRS> Return_RoundPRS(int objCount, float height)
+    /// <summary>
+    /// 카드 위치를 원형으로 반환함
+    /// </summary>
+    /// <param name="objCount">카드의 갯수</param>
+    /// <param name="y_Space">카드별 y 간격</param>
+    /// <param name="std_y_Pos">카드들 위치에서 해당 변수만큼 y위치를 뺌</param>
+    /// <returns></returns>
+    private List<PRS> Return_RoundPRS(int objCount, float y_Space, float std_y_Pos)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
@@ -114,8 +121,8 @@ public class Battle_Card : BattleCommand
         {
             Vector3 pos = Vector3.Lerp(card_LeftPosition.anchoredPosition, card_RightPosition.anchoredPosition, objLerps[i]);
             
-            float curve = Mathf.Sqrt(Mathf.Pow(height, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
-            pos.y += curve * 800 - 600;
+            float curve = Mathf.Sqrt(Mathf.Pow(1, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
+            pos.y += curve * y_Space - std_y_Pos;
             Quaternion rot = Quaternion.Slerp(card_LeftPosition.rotation, card_RightPosition.rotation, objLerps[i]);
             if (objCount <= 2)
             {
@@ -126,6 +133,27 @@ public class Battle_Card : BattleCommand
         }
 
         return results;
+    }
+
+    /// <summary>
+    /// 카드를 융합함
+    /// </summary>
+    private void Fusion_Card()
+    {
+        for(int i = 0; i < battleManager.cardDatasTemp.Count - 1; i++)
+        {
+            Debug.Log(i + " " + (i + 1));
+            if(battleManager.cardDatasTemp[i].unitData.cord == battleManager.cardDatasTemp[i + 1].unitData.cord)
+            {
+                if(battleManager.cardDatasTemp[i].grade == battleManager.cardDatasTemp[i + 1].grade)
+                {
+                    battleManager.cardDatasTemp[i].Upgrade_UnitGrade();
+                    Subtract_CardAt(i + 1);
+                    Debug.Log("융합");
+                    Sort_Card();
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -143,6 +171,20 @@ public class Battle_Card : BattleCommand
     }
 
     /// <summary>
+    /// 지정한 인덱스의 카드를 지운다
+    /// </summary>
+    public void Subtract_CardAt(int index)
+    {
+        if (cur_Card == 0)
+            return;
+
+        cur_Card--;
+        battleManager.cardDatasTemp[index].transform.SetParent(card_PoolManager);
+        battleManager.cardDatasTemp[index].gameObject.SetActive(false);
+        battleManager.cardDatasTemp.RemoveAt(index);
+    }
+
+    /// <summary>
     /// 모든 카드를 지운다
     /// </summary>
     public  void Clear_Cards()
@@ -153,6 +195,8 @@ public class Battle_Card : BattleCommand
         }
     }
 
+
+
     public void Check_MouseOver(CardMove card)
     {
         Debug.Log("CardMouseOver");
@@ -161,13 +205,9 @@ public class Battle_Card : BattleCommand
     {
         Debug.Log("CardMouseExit");
     }
-    public void Check_MouseDown(CardMove card)
+    public void Check_MouseClick(CardMove card)
     {
-        Debug.Log("CardMouseDown");
-    }
-    public void Check_MouseUp(CardMove card)
-    {
-        Debug.Log("CardMouseUp");
+        Debug.Log("Name : " + card.unitData.name + " PRS : " + card.originPRS + " Grade : " + card.grade + " Cost : " + card.unitData.cost);
     }
 
     public void Set_SizeCard(CardMove card , bool isSizeUp)
@@ -180,6 +220,5 @@ public class Battle_Card : BattleCommand
             return;
         }
         card.Set_CardPosition(card.originPRS, 0.3f);
-
     }
 }

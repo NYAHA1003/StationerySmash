@@ -22,7 +22,7 @@ public class PRS
     }
 }
 
-public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField]
     private Image card_Background;
@@ -33,9 +33,13 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]
     private Image card_Grade;
     [SerializeField]
+    private TextMeshProUGUI card_GradeText;
+    [SerializeField]
     private TextMeshProUGUI card_Name;
 
-    private UnitData unitData;
+    public UnitData unitData;
+
+    public int grade;
 
     private RectTransform rectTransform;
 
@@ -65,9 +69,13 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         rectTransform.DOScale(prs.scale, duration);
     }
 
+    /// <summary>
+    /// 유닛 단계 이미지 설정
+    /// </summary>
     public void Set_UnitGrade()
     {
-        switch(unitData.grade)
+        card_GradeText.text = grade.ToString();
+        switch (grade)
         {
             default:
             case 0:
@@ -82,6 +90,16 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
         }
     }
+
+    /// <summary>
+    /// 유닛 업그레이드 
+    /// </summary>
+    public void Upgrade_UnitGrade()
+    {
+        grade++;
+        Set_UnitGrade();
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         battleManager.battle_Card.Check_MouseOver(this);
@@ -94,13 +112,8 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         battleManager.battle_Card.Set_SizeCard(this, false);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-        battleManager.battle_Card.Check_MouseDown(this);
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        battleManager.battle_Card.Check_MouseUp(this);
+        battleManager.battle_Card.Check_MouseClick(this);
     }
 }

@@ -22,8 +22,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private Transform card_Canvas;
     [SerializeField]
-    private RectTransform card_Position;
-    [SerializeField]
     private RectTransform card_SpawnPosition;
     [SerializeField]
     private RectTransform card_LeftPosition;
@@ -35,7 +33,7 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_Position, card_SpawnPosition, card_LeftPosition, card_RightPosition);
+        battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
     }
 
     private void Update()
