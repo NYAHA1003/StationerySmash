@@ -55,6 +55,7 @@ public class CardMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void Set_UnitData(UnitData unitData)
     {
+        grade = 0;
         this.unitData = unitData;
         card_Name.text = unitData.name;
         card_UnitCost.text = unitData.cost.ToString();

@@ -15,8 +15,12 @@ public class Battle_Card : BattleCommand
     private RectTransform card_RightPosition;
     private RectTransform card_SpawnPosition;
 
-    public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition) 
-        : base(battleManager) 
+
+    private Coroutine coroutine;
+    private bool isDrow;
+
+    public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition)
+        : base(battleManager)
     {
         this.unitDataSO = unitDataSO;
         this.cardMove_Prefeb = card_Prefeb;
@@ -32,7 +36,7 @@ public class Battle_Card : BattleCommand
     /// </summary>
     public void Add_AllCard()
     {
-        for(; cur_Card < max_Card;)
+        for (; cur_Card < max_Card;)
         {
             Add_OneCard();
         }
@@ -49,8 +53,25 @@ public class Battle_Card : BattleCommand
         CardMove cardmove = Pool_Card();
         cardmove.Set_UnitData(unitDataSO.unitDatas[random]);
         battleManager.cardDatasTemp.Add(cardmove);
+
         Sort_Card();
+
+        if(coroutine != null)
+        {
+            battleManager.StopCoroutine(coroutine);
+        }
+
+        isDrow = true;
+        coroutine = battleManager.StartCoroutine(Delay_Drow());
     }
+
+    private IEnumerator Delay_Drow()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isDrow = false;
+        Fusion_Card();
+    }
+
 
     /// <summary>
     /// 카드를 풀링함
@@ -77,14 +98,12 @@ public class Battle_Card : BattleCommand
         List<PRS> originCardPRS = new List<PRS>();
         originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count, 800, 600);
 
-        for(int i = 0; i < battleManager.cardDatasTemp.Count; i++)
+        for (int i = 0; i < battleManager.cardDatasTemp.Count; i++)
         {
             CardMove targetCard = battleManager.cardDatasTemp[i];
             targetCard.originPRS = originCardPRS[i];
             targetCard.Set_CardPosition(targetCard.originPRS, 0.5f);
         }
-
-        Fusion_Card();
     }
 
     /// <summary>
@@ -99,7 +118,7 @@ public class Battle_Card : BattleCommand
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
 
-        switch(objCount)
+        switch (objCount)
         {
             case 1:
                 objLerps = new float[] { 0.5f };
@@ -117,10 +136,10 @@ public class Battle_Card : BattleCommand
         }
 
 
-        for(int i = 0; i < objCount; i++)
+        for (int i = 0; i < objCount; i++)
         {
             Vector3 pos = Vector3.Lerp(card_LeftPosition.anchoredPosition, card_RightPosition.anchoredPosition, objLerps[i]);
-            
+
             float curve = Mathf.Sqrt(Mathf.Pow(1, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
             pos.y += curve * y_Space - std_y_Pos;
             Quaternion rot = Quaternion.Slerp(card_LeftPosition.rotation, card_RightPosition.rotation, objLerps[i]);
@@ -140,17 +159,22 @@ public class Battle_Card : BattleCommand
     /// </summary>
     private void Fusion_Card()
     {
-        for(int i = 0; i < battleManager.cardDatasTemp.Count - 1; i++)
+        Debug.Log("융합 호출");
+        if (isDrow) return;
+        for (int i = 0; i < battleManager.cardDatasTemp.Count - 1; i++)
         {
-            Debug.Log(i + " " + (i + 1));
-            if(battleManager.cardDatasTemp[i].unitData.cord == battleManager.cardDatasTemp[i + 1].unitData.cord)
+            if (battleManager.cardDatasTemp[i].unitData.cord == battleManager.cardDatasTemp[i + 1].unitData.cord)
             {
-                if(battleManager.cardDatasTemp[i].grade == battleManager.cardDatasTemp[i + 1].grade)
+                if (battleManager.cardDatasTemp[i].grade == battleManager.cardDatasTemp[i + 1].grade)
                 {
                     battleManager.cardDatasTemp[i].Upgrade_UnitGrade();
                     Subtract_CardAt(i + 1);
-                    Debug.Log("융합");
                     Sort_Card();
+
+                    isDrow = true;
+                    coroutine = battleManager.StartCoroutine(Delay_Drow());
+                    Debug.Log(i + ", " + (i + 1) + " 융합");
+                    return;
                 }
             }
         }
@@ -161,13 +185,7 @@ public class Battle_Card : BattleCommand
     /// </summary>
     public void Subtract_Card()
     {
-        if (cur_Card == 0) 
-            return;
-
-        cur_Card--;
-        battleManager.cardDatasTemp[cur_Card].transform.SetParent(card_PoolManager);
-        battleManager.cardDatasTemp[cur_Card].gameObject.SetActive(false);
-        battleManager.cardDatasTemp.RemoveAt(cur_Card);
+        Subtract_CardAt(cur_Card - 1);
     }
 
     /// <summary>
@@ -179,6 +197,7 @@ public class Battle_Card : BattleCommand
             return;
 
         cur_Card--;
+        Debug.Log(index);
         battleManager.cardDatasTemp[index].transform.SetParent(card_PoolManager);
         battleManager.cardDatasTemp[index].gameObject.SetActive(false);
         battleManager.cardDatasTemp.RemoveAt(index);
@@ -187,32 +206,34 @@ public class Battle_Card : BattleCommand
     /// <summary>
     /// 모든 카드를 지운다
     /// </summary>
-    public  void Clear_Cards()
+    public void Clear_Cards()
     {
-        for(;cur_Card > 0;)
+        battleManager.StopCoroutine(coroutine);
+        for (; cur_Card > 0;)
         {
             Subtract_Card();
         }
     }
 
-
-
     public void Check_MouseOver(CardMove card)
     {
+        if (isDrow) return;
         Debug.Log("CardMouseOver");
     }
     public void Check_MouseExit(CardMove card)
     {
+        if (isDrow) return;
         Debug.Log("CardMouseExit");
     }
     public void Check_MouseClick(CardMove card)
     {
+        if (isDrow) return;
         Debug.Log("Name : " + card.unitData.name + " PRS : " + card.originPRS + " Grade : " + card.grade + " Cost : " + card.unitData.cost);
     }
 
-    public void Set_SizeCard(CardMove card , bool isSizeUp)
+    public void Set_SizeCard(CardMove card, bool isSizeUp)
     {
-        if(isSizeUp)
+        if (isSizeUp)
         {
             Vector3 sizeUpPos = new Vector3(card.originPRS.pos.x, -200f, -10);
             card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 1.5f), 0.3f);
