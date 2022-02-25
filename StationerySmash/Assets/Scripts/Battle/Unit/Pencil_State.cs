@@ -76,7 +76,25 @@ public class Pencil_Move_State : Pencil_State
 
     public override void Update()
     {
+        //¿ì¸® ÆÀ
+        if(myUnit.isMyTeam)
+        {
+            Move_MyTeam();
+            return;
+        }
+
+        //»ó´ë ÆÀ
+        Move_EnemyTeam();
+    }
+
+    private void Move_MyTeam()
+    {
         myTrm.Translate(Vector2.right * myUnitData.moveSpeed * Time.deltaTime);
+    }
+
+    private void Move_EnemyTeam()
+    {
+        myTrm.Translate(Vector2.left * myUnitData.moveSpeed * Time.deltaTime);
     }
 }
 

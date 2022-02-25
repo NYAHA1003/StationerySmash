@@ -9,7 +9,7 @@ public class Battle_Unit : BattleCommand
     private Transform unit_Parent;
     private GameObject unit_AfterImage;
     private SpriteRenderer unit_AfterImage_Spr;
-    public bool isMyTeam;
+    public bool isMyTeam = true;
 
     public Battle_Unit(BattleManager battleManager, GameObject unit_Prefeb, Transform unit_PoolManager, Transform unit_Parent, GameObject unit_AfterImage) : base(battleManager)
     {
@@ -23,7 +23,7 @@ public class Battle_Unit : BattleCommand
     public void Summon_Unit(UnitData unitData, Vector3 Pos)
     {
         Unit unit = Pool_Unit(Pos);
-        unit.Set_UnitData(unitData);
+        unit.Set_UnitData(unitData, isMyTeam);
     }
 
     public void Set_UnitAfterImage(UnitData unitData, Vector3 Pos, bool isDelete = false)

@@ -29,7 +29,7 @@ public class Battle_Camera : BattleCommand
 
         mouse_Pos = Input.mousePosition * 0.005f;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.y > camera.pixelHeight * 0.3f)
         {
             click_Pos = mouse_Pos;
             cur_Pos = camera.transform.position;

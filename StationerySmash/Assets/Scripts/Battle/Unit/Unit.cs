@@ -21,9 +21,11 @@ public class Unit : MonoBehaviour
         unitState = unitState.Process();
     }
 
-    public void Set_UnitData(UnitData unitData)
+    public void Set_UnitData(UnitData unitData, bool isMyTeam)
     {
         this.unitData = unitData;
+        this.isMyTeam = isMyTeam;
+        spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
 
         unitState = new Pencil_State(transform, spr.transform, this);
