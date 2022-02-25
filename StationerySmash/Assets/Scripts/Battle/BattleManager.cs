@@ -8,6 +8,21 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField]
     private UnitDataSO unitDataSO;
+    [SerializeField]
+    private StageDataSO stageDataSO;
+
+    public StageData currentStageData
+    {
+        get
+        {
+            return stageDataSO.stageDatas[0];
+        }
+
+        private set
+        {
+
+        }
+    }
 
     #endregion
 
@@ -30,7 +45,7 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
-    #region 카메라 시스템
+    #region 카메라 시스템 Battle_Camera
 
     public Battle_Camera battle_Camera { get; private set; }
    

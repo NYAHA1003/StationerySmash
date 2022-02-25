@@ -723,6 +723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitDataSO: {fileID: 11400000, guid: 196a1c2a611bf814194df094e01de64f, type: 2}
+  stageDataSO: {fileID: 11400000, guid: a930bac7dd6fe314a9d2c68dd5b3deef, type: 2}
   cardDatasTemp: []
   cardMove_Prefeb: {fileID: 1637879170446956799, guid: 8826a6084291dae4ab520c6869beb819, type: 3}
   card_PoolManager: {fileID: 1452281135}

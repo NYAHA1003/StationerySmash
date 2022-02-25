@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class Battle_Camera : BattleCommand
 {
+    private Camera camera;
+    
     private Vector3 click_Pos;
     private Vector3 cur_Pos;
     private Vector3 mouse_Pos;
 
     private bool isCameraMove = false;
 
-    private Camera camera;
 
     public Battle_Camera(BattleManager battleManager, Camera camera) : base(battleManager)
     {
@@ -35,6 +36,14 @@ public class Battle_Camera : BattleCommand
         if (isCameraMove)
         {
             camera.transform.position = new Vector3(cur_Pos.x + (click_Pos.x + -mouse_Pos.x), 0, -10);
+            if (battleManager.currentStageData.max_Range + 1f < camera.transform.position.x)
+            {
+                camera.transform.DOMoveX(battleManager.currentStageData.max_Range, 0.1f);
+            }
+            if (-battleManager.currentStageData.max_Range - 1f > camera.transform.position.x)
+            {
+                camera.transform.DOMoveX(-battleManager.currentStageData.max_Range, 0.1f);
+            }
         }
     }
 }
