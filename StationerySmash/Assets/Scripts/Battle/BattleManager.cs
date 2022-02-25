@@ -62,6 +62,8 @@ public class BattleManager : MonoBehaviour
     private Transform unit_PoolManager;
     [SerializeField]
     private Transform unit_Parent;
+    [SerializeField]
+    private GameObject unit_AfterImage;
 
     #endregion
 
@@ -80,7 +82,7 @@ public class BattleManager : MonoBehaviour
     {
         battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
         battle_Camera = new Battle_Camera(this, main_Cam);
-        battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent);
+        battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent, unit_AfterImage);
     }
 
     private void Update()

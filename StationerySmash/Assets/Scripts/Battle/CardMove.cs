@@ -65,16 +65,18 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
     {
         cardCanvas ??= transform.parent.GetComponent<Canvas>();
         
-        this.id = id;
         isDrag = false;
-        fusion_Effect.color = new Color(1, 1, 1, 1);
-        fusion_Effect.DOFade(0, 0.8f);
-        grade = 0;
+
+        this.id = id;
         this.unitData = unitData;
         card_Name.text = unitData.name;
         card_UnitCost.text = unitData.cost.ToString();
-        card_UnitImage = null;
+        card_UnitImage.sprite = unitData.sprite;
+        grade = 0;
         Set_UnitGrade();
+        
+        fusion_Effect.color = new Color(1, 1, 1, 1);
+        fusion_Effect.DOFade(0, 0.8f);
     }
 
     public void Set_CardPRS(PRS prs, float duration, bool isDotween = true)
@@ -168,14 +170,27 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
          *Set_CardPosition(new PRS(cardCanvas.transform.TransformPoint(localPos), Quaternion.identity, Vector3.one), 0, false);
         */
 
+        if (battleManager.battle_Card.isFusion) return;
+        if (battleManager.battle_Card.isDrow) return;
+
         isDrag = true;
         transform.position = Input.mousePosition;
         Set_CardRot(Quaternion.identity, 0.3f);
+
+        if(rectTransform.anchoredPosition.y > 0)
+        {
+            Vector3 mouse_Pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            battleManager.battle_Unit.Set_UnitAfterImage(unitData, mouse_Pos);
+            return;
+        }
+        battleManager.battle_Unit.Set_UnitAfterImage(unitData, Vector3.zero, true);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if(rectTransform.anchoredPosition.y > 0)
+        battleManager.battle_Unit.Set_UnitAfterImage(unitData, Vector3.zero, true);
+
+        if (rectTransform.anchoredPosition.y > 0)
         {
             battleManager.battle_Card.Check_MouseUp(this);
             return;

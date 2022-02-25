@@ -17,4 +17,5 @@ public class UnitData
     public int cord;
     public int cost;
     public string name;
+    public Sprite sprite;
 }

@@ -5,6 +5,10 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     private UnitState unitState;
+
+    [SerializeField]
+    private SpriteRenderer spr;
+
     public UnitData unitData;
 
     private void Start()
@@ -20,5 +24,6 @@ public class Unit : MonoBehaviour
     public void Set_UnitData(UnitData unitData)
     {
         this.unitData = unitData;
+        spr.sprite = unitData.sprite;
     }
 }

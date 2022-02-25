@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6639921959460017928}
   - component: {fileID: 8050812612465737753}
   m_Layer: 0
-  m_Name: Square
+  m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,3 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 509f157fbcc27074185d8f8988385b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spr: {fileID: 8050812612465737753}
+  unitData:
+    cord: 0
+    cost: 0
+    name: 
+    sprite: {fileID: 0}

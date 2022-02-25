@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class Battle_Card : BattleCommand
@@ -15,10 +16,9 @@ public class Battle_Card : BattleCommand
     private RectTransform card_RightPosition;
     private RectTransform card_SpawnPosition;
 
-
     private Coroutine coroutine;
-    private bool isDrow; //카드를 뽑거나 삭제하는 중인지 
-    private bool isFusion; //카드가 융합중인 상태인지
+    public bool isDrow {get; private set;} //카드를 뽑거나 삭제하는 중인지 
+    public bool isFusion { get; private set; } //카드가 융합중인 상태인지
     public bool isCardDown { get; private set; } //카드를 클릭한 상태인지
 
     private int idCount;
@@ -170,6 +170,7 @@ public class Battle_Card : BattleCommand
                 }
             }
         }
+        isFusion = false;
     }
 
     private IEnumerator Fusion_Move(int index)
@@ -188,8 +189,6 @@ public class Battle_Card : BattleCommand
 
         battleManager.StopCoroutine(coroutine);
         coroutine = battleManager.StartCoroutine(Delay_Drow());
-
-        isFusion = false;
     }
 
     /// <summary>
