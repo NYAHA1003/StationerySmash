@@ -18,6 +18,7 @@ public class UnitData
     public int cost;
     public string name;
     public float moveSpeed;
+    public float attackSpeed;
     public float range;
     public Sprite sprite;
 }

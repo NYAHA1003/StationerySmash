@@ -116,7 +116,7 @@ public class Pencil_Move_State : Pencil_State
         {
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < myUnitData.range)
             {
-                nextState = new Pencil_Attack_State(myTrm, mySprTrm, myUnit);
+                nextState = new Pencil_Attack_State(myTrm, mySprTrm, myUnit, targetUnit);
                 curEvent = eEvent.EXIT;
             }
         }
@@ -126,17 +126,49 @@ public class Pencil_Move_State : Pencil_State
 
 public class Pencil_Attack_State : Pencil_State
 {
-    public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    private Unit targetUnit;
+    private float cur_delay;
+    private float max_delay = 100;
+    public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Unit myUnit, Unit targetUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        this.targetUnit = targetUnit;
     }
 
     public override void Enter()
     {
+        Debug.Log("공격모드");
+        cur_delay = 0;
         base.Enter();
     }
     public override void Update()
     {
-        base.Update();
+        Check_Range();
+        if(max_delay >= cur_delay)
+        {
+            cur_delay += myUnitData.attackSpeed * Time.deltaTime;
+            myUnit.Update_DelayBar(cur_delay / max_delay);
+            return;
+        }
+        Attack();
+    }
+
+    private void Attack()
+    {
+        Debug.Log("공격");
+        nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+        curEvent = eEvent.EXIT;
+    }
+
+    private void Check_Range()
+    {
+        if (targetUnit != null)
+        {
+            if (Vector2.Distance(myTrm.position, targetUnit.transform.position) > myUnitData.range)
+            {
+                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+                curEvent = eEvent.EXIT;
+            }
+        }
     }
 }
 

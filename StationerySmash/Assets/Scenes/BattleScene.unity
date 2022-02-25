@@ -845,6 +845,8 @@ MonoBehaviour:
   card_SpawnPosition: {fileID: 15836575}
   card_LeftPosition: {fileID: 1489626588}
   card_RightPosition: {fileID: 2050583622}
+  unitMyDatasTemp: []
+  unitEnemyDatasTemp: []
   unit_Prefeb: {fileID: 636465713026102458, guid: 255f6e8226be8b545a784f4db6787063, type: 3}
   unit_PoolManager: {fileID: 1213032192}
   unit_Parent: {fileID: 1681970528}
