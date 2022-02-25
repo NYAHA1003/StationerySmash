@@ -30,14 +30,25 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    #region 카메라 시스템
+
+    public Battle_Camera battle_Camera { get; private set; }
+   
+    [SerializeField]
+    public Camera main_Cam;
+
+    #endregion
 
     private void Start()
     {
         battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
+        battle_Camera = new Battle_Camera(this, main_Cam);
     }
 
     private void Update()
     {
+        battle_Camera.Update_CameraPos();
+
         if(Input.GetKeyDown(KeyCode.X))
         {
             battle_Card.Add_OneCard();
