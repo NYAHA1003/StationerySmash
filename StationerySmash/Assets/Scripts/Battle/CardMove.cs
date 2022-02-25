@@ -22,7 +22,7 @@ public class PRS
     }
 }
 
-public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
+public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
     private Image card_Background;
@@ -52,6 +52,7 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
 
     private Canvas cardCanvas;
 
+    private bool isDrag; // 드래그 중인 상태인가
     private void Awake()
     {
         battleManager = FindObjectOfType<BattleManager>();
@@ -65,6 +66,7 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
         cardCanvas ??= transform.parent.GetComponent<Canvas>();
         
         this.id = id;
+        isDrag = false;
         fusion_Effect.color = new Color(1, 1, 1, 1);
         fusion_Effect.DOFade(0, 0.8f);
         grade = 0;
@@ -75,7 +77,7 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
         Set_UnitGrade();
     }
 
-    public void Set_CardPosition(PRS prs, float duration, bool isDotween = true)
+    public void Set_CardPRS(PRS prs, float duration, bool isDotween = true)
     {
         if (isDotween)
         {
@@ -88,11 +90,34 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
         rectTransform.rotation = prs.rot;
         rectTransform.localScale = prs.scale;
     }
-
-    public void Set_Size(float size, float duration)
+    public void Set_CardPos(Vector3 pos, float duration, bool isDotween = true)
     {
-        rectTransform.DOScale(size, duration);
+        if(isDotween)
+        {
+            transform.DOMove(pos, duration);
+            return;
+        }
+        transform.position = pos;
     }
+    public void Set_CardScale(Vector3 scale, float duration, bool isDotween = true)
+    {
+        if (isDotween)
+        {
+            rectTransform.DOScale(scale, duration);
+            return;
+        }
+        rectTransform.localScale = scale;
+    }
+    public void Set_CardRot(Quaternion rot, float duration, bool isDotween = true)
+    {
+        if (isDotween)
+        {
+            rectTransform.DORotateQuaternion(rot, duration);
+            return;
+        }
+        rectTransform.rotation = rot;
+    }
+
 
     /// <summary>
     /// 유닛 단계 이미지 설정
@@ -136,26 +161,42 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        //Vector2 localPos;
-        //RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mouseScrollDelta, cardCanvas.worldCamera, out localPos);
-        //Set_CardPosition(new PRS(cardCanvas.transform.TransformPoint(localPos), Quaternion.identity, Vector3.one), 0, false);
+        /*
+         *캔버스가 카메라옵션일 때
+         *Vector2 localPos;
+         *RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mouseScrollDelta, cardCanvas.worldCamera, out localPos);
+         *Set_CardPosition(new PRS(cardCanvas.transform.TransformPoint(localPos), Quaternion.identity, Vector3.one), 0, false);
+        */
 
+        isDrag = true;
         transform.position = Input.mousePosition;
-        Set_Size(1.3f, 0.3f);
+        Set_CardRot(Quaternion.identity, 0.3f);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if(rectTransform.anchoredPosition.y > 0)
         {
-            battleManager.battle_Card.Check_MouseClick(this);
-            Set_Size(1f, 0.3f);
+            battleManager.battle_Card.Check_MouseUp(this);
             return;
         }
 
-        Set_CardPosition(originPRS, 0.3f);
-        Set_Size(1f, 0.3f);
+        Set_CardPRS(originPRS, 0.3f);
         battleManager.battle_Card.Check_MouseExit(this);
+        isDrag = false;
 
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        battleManager.battle_Card.Check_MouseOver(this);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if(!isDrag)
+        {
+            battleManager.battle_Card.Check_MouseExit(this);
+        }
     }
 }

@@ -17,8 +17,9 @@ public class Battle_Card : BattleCommand
 
 
     private Coroutine coroutine;
-    private bool isDrow;
-    private bool isFusion;
+    private bool isDrow; //카드를 뽑거나 삭제하는 중인지 
+    private bool isFusion; //카드가 융합중인 상태인지
+    public bool isCardDown { get; private set; } //카드를 클릭한 상태인지
 
     private int idCount;
 
@@ -98,7 +99,7 @@ public class Battle_Card : BattleCommand
         {
             CardMove targetCard = battleManager.cardDatasTemp[i];
             targetCard.originPRS = originCardPRS[i];
-            targetCard.Set_CardPosition(targetCard.originPRS, 0.5f);
+            targetCard.Set_CardPRS(targetCard.originPRS, 0.5f);
         }
     }
 
@@ -173,7 +174,7 @@ public class Battle_Card : BattleCommand
 
     private IEnumerator Fusion_Move(int index)
     {
-        battleManager.cardDatasTemp[index + 1].Set_CardPosition(battleManager.cardDatasTemp[index].originPRS, 0.3f);
+        battleManager.cardDatasTemp[index + 1].Set_CardPRS(battleManager.cardDatasTemp[index].originPRS, 0.3f);
         battleManager.cardDatasTemp[index].Fusion_FadeInEffect();
         battleManager.cardDatasTemp[index + 1].Fusion_FadeInEffect();
 
@@ -242,35 +243,44 @@ public class Battle_Card : BattleCommand
         }
     }
 
+    /// <summary>
+    /// 카드를 선택함
+    /// </summary>
+    /// <param name="card"></param>
     public void Check_MouseOver(CardMove card)
     {
         if (isFusion) return;
         if (isDrow) return;
-        Set_SizeCard(card, true);
+        card.Set_CardScale(Vector3.one * 1.3f, 0.3f);
+        isCardDown = true;
     }
+
+    /// <summary>
+    /// 카드 선택을 취소함
+    /// </summary>
+    /// <param name="card"></param>
     public void Check_MouseExit(CardMove card)
     {
         if (isFusion) return;
         if (isDrow) return;
-        Set_SizeCard(card, false);
+        card.Set_CardScale(Vector3.one * 1, 0.3f);
+        isCardDown = false;
     }
-    public void Check_MouseClick(CardMove card)
+
+    /// <summary>
+    /// 카드를 사용한다
+    /// </summary>
+    /// <param name="card"></param>
+    public void Check_MouseUp(CardMove card)
     {
         if (isFusion) return;
         if (isDrow) return;
         Subtract_CardAt(battleManager.cardDatasTemp.FindIndex(x => x.id == card.id));
-        Debug.Log("삭제");
-        //Debug.Log("Id : " + card.id);
-    }
+        isCardDown = false;
 
-    public void Set_SizeCard(CardMove card, bool isSizeUp)
-    {
-        if (isSizeUp)
-        {
-            Vector3 sizeUpPos = new Vector3(card.originPRS.pos.x, -200f, -10);
-            //card.Set_CardPosition(new PRS(sizeUpPos, Quaternion.identity, Vector3.one * 1.5f), 0.3f);
-            return;
-        }
-        card.Set_CardPosition(card.originPRS, 0.3f);
+        //유닛 소환
+
+        Vector3 mouse_Pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        battleManager.battle_Unit.Summon_Unit(card.unitData, new Vector3(mouse_Pos.x,0,0));
     }
 }

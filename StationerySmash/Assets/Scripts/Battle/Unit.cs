@@ -5,15 +5,20 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     private UnitState unitState;
-
+    public UnitData unitData;
 
     private void Start()
     {
-        //¿Ø¥÷ √ ±‚»≠
+
     }
 
     private void Update()
     {
-        unitState = unitState.Process();
+        //unitState = unitState.Process();
+    }
+
+    public void Set_UnitData(UnitData unitData)
+    {
+        this.unitData = unitData;
     }
 }

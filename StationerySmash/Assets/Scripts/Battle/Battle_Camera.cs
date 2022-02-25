@@ -20,6 +20,13 @@ public class Battle_Camera : BattleCommand
 
     public void Update_CameraPos()
     {
+        //카드를 클릭한 상태라면
+        if(battleManager.battle_Card.isCardDown)
+        {
+            isCameraMove = false;
+            return;
+        }
+
         mouse_Pos = Input.mousePosition * 0.005f;
 
         if (Input.GetMouseButtonDown(0))
