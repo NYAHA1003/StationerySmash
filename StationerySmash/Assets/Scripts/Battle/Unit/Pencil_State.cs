@@ -80,11 +80,13 @@ public class Pencil_Move_State : Pencil_State
         if(myUnit.isMyTeam)
         {
             Move_MyTeam();
+            Check_Range(myUnit.battleManager.unitEnemyDatasTemp);
             return;
         }
 
         //»ó´ë ÆÀ
         Move_EnemyTeam();
+        Check_Range(myUnit.battleManager.unitMyDatasTemp);
     }
 
     private void Move_MyTeam()
@@ -96,12 +98,45 @@ public class Pencil_Move_State : Pencil_State
     {
         myTrm.Translate(Vector2.left * myUnitData.moveSpeed * Time.deltaTime);
     }
+
+    private void Check_Range(List<Unit> list)
+    {
+        float targetRange = float.MaxValue;
+        Unit targetUnit = null;
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].transform.position.sqrMagnitude < targetRange)
+            {
+                targetUnit = list[i];
+                targetRange = targetUnit.transform.position.sqrMagnitude;
+            }
+        }
+        
+        if(targetUnit != null)
+        {
+            if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < myUnitData.range)
+            {
+                nextState = new Pencil_Attack_State(myTrm, mySprTrm, myUnit);
+                curEvent = eEvent.EXIT;
+            }
+        }
+
+    }
 }
 
 public class Pencil_Attack_State : Pencil_State
 {
     public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+    }
+    public override void Update()
+    {
+        base.Update();
     }
 }
 

@@ -235,7 +235,11 @@ public class Battle_Card : BattleCommand
     /// </summary>
     public void Clear_Cards()
     {
-        battleManager.StopCoroutine(coroutine);
+        if (coroutine != null)
+        {
+            battleManager.StopCoroutine(coroutine);
+        }
+
         for (; cur_Card > 0;)
         {
             Subtract_Card();

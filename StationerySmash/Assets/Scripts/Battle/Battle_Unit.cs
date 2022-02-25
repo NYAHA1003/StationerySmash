@@ -23,7 +23,14 @@ public class Battle_Unit : BattleCommand
     public void Summon_Unit(UnitData unitData, Vector3 Pos)
     {
         Unit unit = Pool_Unit(Pos);
-        unit.Set_UnitData(unitData, isMyTeam);
+        unit.Set_UnitData(unitData, isMyTeam, battleManager);
+
+        if(isMyTeam)
+        {
+            battleManager.unitMyDatasTemp.Add(unit);
+            return;
+        }
+        battleManager.unitEnemyDatasTemp.Add(unit);
     }
 
     public void Set_UnitAfterImage(UnitData unitData, Vector3 Pos, bool isDelete = false)

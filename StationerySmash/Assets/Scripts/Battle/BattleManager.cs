@@ -56,6 +56,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("¿Ø¥÷Ω√Ω∫≈€ Battle_Unit")]
     [Space(30)]
+    public List<Unit> unitMyDatasTemp;
+    public List<Unit> unitEnemyDatasTemp;
     [SerializeField]
     private GameObject unit_Prefeb;
     [SerializeField]

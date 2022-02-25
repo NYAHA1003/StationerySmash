@@ -14,6 +14,8 @@ public class Unit : MonoBehaviour
     private bool isSettingEnd;
     public bool isMyTeam;
 
+    public BattleManager battleManager;
+
     private void Update()
     {
         if (!isSettingEnd) return;
@@ -21,12 +23,13 @@ public class Unit : MonoBehaviour
         unitState = unitState.Process();
     }
 
-    public void Set_UnitData(UnitData unitData, bool isMyTeam)
+    public void Set_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
     {
         this.unitData = unitData;
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
+        this.battleManager = battleManager;
 
         unitState = new Pencil_State(transform, spr.transform, this);
 
