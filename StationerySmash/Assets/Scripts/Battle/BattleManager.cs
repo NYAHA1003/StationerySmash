@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
 
 public class BattleManager : MonoBehaviour
 {
@@ -20,10 +23,7 @@ public class BattleManager : MonoBehaviour
             return stageDataSO.stageDatas[0];
         }
 
-        private set
-        {
-
-        }
+        private set {}
     }
 
     #endregion
@@ -64,6 +64,8 @@ public class BattleManager : MonoBehaviour
     private Transform unit_Parent;
     [SerializeField]
     private GameObject unit_AfterImage;
+
+    public TextMeshProUGUI teamText;
 
     #endregion
 
@@ -111,6 +113,16 @@ public class BattleManager : MonoBehaviour
     public GameObject Create_Object(GameObject gameobj, Vector3 position, Quaternion quaternion)
     {
         return Instantiate(gameobj, position, quaternion);
+    }
+
+    #endregion
+
+    #region À¯´Ö ½Ã½ºÅÛ ÇÔ¼ö Battle_Unit
+
+    public void Change_Team()
+    {
+        battle_Unit.isMyTeam = !battle_Unit.isMyTeam;
+        teamText.text = battle_Unit.isMyTeam ? "³ªÀÇ ÆÀ" : "»ó´ë ÆÀ";
     }
 
     #endregion

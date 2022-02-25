@@ -9,6 +9,7 @@ public class Battle_Unit : BattleCommand
     private Transform unit_Parent;
     private GameObject unit_AfterImage;
     private SpriteRenderer unit_AfterImage_Spr;
+    public bool isMyTeam;
 
     public Battle_Unit(BattleManager battleManager, GameObject unit_Prefeb, Transform unit_PoolManager, Transform unit_Parent, GameObject unit_AfterImage) : base(battleManager)
     {

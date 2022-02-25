@@ -20,9 +20,17 @@ public class UnitState
 
     protected UnitState nextState;  // 다음 상태
 
-    public UnitState()
-    { 
+    protected Transform myTrm;
+    protected Transform mySprTrm;
+    protected Unit myUnit;
+    protected UnitData myUnitData;
 
+    public UnitState(Transform myTrm, Transform mySprTrm, Unit myUnit)
+    {
+        this.myTrm = myTrm;
+        this.mySprTrm = mySprTrm;
+        this.myUnit = myUnit;
+        myUnitData = myUnit.unitData;
     }
 
 
