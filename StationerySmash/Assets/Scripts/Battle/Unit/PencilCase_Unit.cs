@@ -11,14 +11,27 @@ public class PencilCase_Unit : Unit
     {
         battleManager = FindObjectOfType<BattleManager>();
         Set_PencilCaseData(battleManager.pencilCaseDataSO, isMyTeam, battleManager);
-        
-        if(isMyTeam)
+        Set_Position();
+
+        if (isMyTeam)
         {
             battleManager.battle_Unit.Add_UnitListMy(this);
             return;
         }
         battleManager.battle_Unit.Add_UnitListEnemy(this);
+        
     }
+
+    private void Set_Position()
+    {
+        if (isMyTeam)
+        {
+            transform.position = new Vector2(-battleManager.currentStageData.max_Range, 0);
+            return;
+        }
+        transform.position = new Vector2(battleManager.currentStageData.max_Range, 0);
+    }
+
     public void Set_PencilCaseData(PencilCaseDataSO pencilCaseData, bool isMyTeam, BattleManager battleManager)
     {
         this.pencilCaseData = pencilCaseData;
