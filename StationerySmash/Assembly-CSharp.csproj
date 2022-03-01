@@ -61,6 +61,8 @@
     <Compile Include="Assets\Scripts\Battle\CardMove.cs" />
     <Compile Include="Assets\Scripts\Battle\Battle_Card.cs" />
     <Compile Include="Assets\Scripts\Base\Command.cs" />
+    <Compile Include="Assets\Scripts\Battle\Battle_Effect.cs" />
+    <Compile Include="Assets\Scripts\Battle\EffectObject.cs" />
     <Compile Include="Assets\Scripts\Base\UnitDataSO.cs" />
     <Compile Include="Assets\Scripts\Base\UnitState.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit\Unit.cs" />
@@ -69,8 +71,12 @@
     <Compile Include="Assets\Scripts\Text\TextSetting.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit\Pencil_State.cs" />
     <Compile Include="Assets\Scripts\Base\StageDataSO.cs" />
-    <Compile Include="Assets\Scripts\Battle\Battle_Effect.cs" />
-    <Compile Include="Assets\Scripts\Battle\EffectObject.cs" />
+    <Compile Include="Assets\Scripts\Battle\Unit\PencilCase_Normal_State.cs" />
+    <Compile Include="Assets\Scripts\Battle\Unit\PencilCase_Unit.cs" />
+    <Compile Include="Assets\Scripts\Base\PencilCaseDataSO.cs" />
+    <Compile Include="Assets\Scripts\Battle\Unit\Stationary_Unit.cs" />
+    <Compile Include="Assets\Scripts\Base\DataBase.cs" />
+    <Compile Include="Assets\Scripts\Base\Stationary_UnitState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

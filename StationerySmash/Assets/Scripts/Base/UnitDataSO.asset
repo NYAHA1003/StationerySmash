@@ -14,26 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitDatas:
   - cord: 0
-    cost: 1
-    name: "\uC5F0\uD544"
+    unitName: "\uC5F0\uD544"
     hp: 100
-    moveSpeed: 0.1
-    attackSpeed: 20
-    range: 1
     sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - cord: 1
-    cost: 2
-    name: "\uC9C0\uC6B0\uAC1C"
-    hp: 100
-    moveSpeed: 0.5
-    attackSpeed: 20
-    range: 0.3
-    sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  - cord: 2
-    cost: 3
-    name: "\uC0E4\uD504"
-    hp: 100
-    moveSpeed: 1
-    attackSpeed: 20
+    cost: 1
+    moveSpeed: 0.1
+    attackSpeed: 60
     range: 1
+  - cord: 1
+    unitName: "\uC9C0\uC6B0\uAC1C"
+    hp: 100
+    sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+    cost: 2
+    moveSpeed: 0.5
+    attackSpeed: 60
+    range: 0.3
+  - cord: 2
+    unitName: "\uC0E4\uD504"
+    hp: 100
     sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+    cost: 3
+    moveSpeed: 1
+    attackSpeed: 60
+    range: 1

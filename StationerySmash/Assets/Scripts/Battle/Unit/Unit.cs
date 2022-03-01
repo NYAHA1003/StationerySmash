@@ -3,34 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour 
 {
-    private UnitState unitState;
+    protected UnitState unitState;
 
     [SerializeField]
-    private SpriteRenderer spr;
-
-    [SerializeField]
-    private Canvas canvas;
-    [SerializeField]
-    private Image delayBar;
+    protected SpriteRenderer spr;
 
 
-    public UnitData unitData;
-
-    private bool isSettingEnd;
-    public int hp { get; private set; } = 100;
-    public float attack_Cur_Delay { get; private set; }
+    protected bool isSettingEnd;
+    public int hp { get; protected set; } = 100;
     public bool isMyTeam;
 
-    public BattleManager battleManager;
+    public BattleManager battleManager { get; protected set; }
 
-    private Camera mainCam;
-
-    private void Awake()
-    {
-        mainCam = Camera.main;
-    }
 
     private void Update()
     {
@@ -39,42 +25,21 @@ public class Unit : MonoBehaviour
         unitState = unitState.Process();
     }
 
-    public void Set_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
+    public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager)
     {
         transform.name = unitData.cord + (isMyTeam ? "¾Æ±º":"Àû");
-        attack_Cur_Delay = 0;
-        this.unitData = unitData;
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
         this.battleManager = battleManager;
-        canvas.worldCamera = mainCam;
-        delayBar.rectTransform.anchoredPosition = isMyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
         hp = unitData.hp;
-
-        unitState = new Pencil_State(transform, spr.transform, this);
-
+        
         isSettingEnd = true;
     }
 
-    public void Pool_Unit()
-    {
-        battleManager.Pool_Unit(this);
-    }
 
-    public void Update_DelayBar(float delay)
+    public virtual void Run_Damaged(Unit attacker, int damage, float knockback)
     {
-        delayBar.fillAmount = delay;
-    }
-
-    public void Run_Damaged(Unit attacker, int damage, float knockback)
-    {
-        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, knockback);
-    }
-
-    public void Set_AttackDelay(float delay)
-    {
-        attack_Cur_Delay = delay;
     }
 
     public void Subtract_HP(int damage)

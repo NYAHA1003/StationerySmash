@@ -23,14 +23,12 @@ public class UnitState
     protected Transform myTrm;
     protected Transform mySprTrm;
     protected Unit myUnit;
-    protected UnitData myUnitData;
 
     public UnitState(Transform myTrm, Transform mySprTrm, Unit myUnit)
     {
         this.myTrm = myTrm;
         this.mySprTrm = mySprTrm;
         this.myUnit = myUnit;
-        myUnitData = myUnit.unitData;
     }
 
     public virtual void Enter() { curEvent = eEvent.UPDATE; }

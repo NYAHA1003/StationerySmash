@@ -13,6 +13,7 @@ public class BattleManager : MonoBehaviour
     [Space(30)]
     [SerializeField]
     private UnitDataSO unitDataSO;
+    public PencilCaseDataSO pencilCaseDataSO;
     [SerializeField]
     private StageDataSO stageDataSO;
 
@@ -85,6 +86,8 @@ public class BattleManager : MonoBehaviour
     #region 이펙트 시스템 Battle_Effect
 
     public Battle_Effect battle_Effect { get; private set; }
+    [Header("이펙트 시스템")]
+    [Space(30)]
     [SerializeField]
     private Transform effect_PoolManager;
 

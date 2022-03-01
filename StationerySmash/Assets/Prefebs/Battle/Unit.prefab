@@ -166,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636465713026102459}
-  - component: {fileID: 1573113712416981052}
+  - component: {fileID: 4403586084709680864}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -190,7 +190,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1573113712416981052
+--- !u!114 &4403586084709680864
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,22 +199,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 636465713026102458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 509f157fbcc27074185d8f8988385b1c, type: 3}
+  m_Script: {fileID: 11500000, guid: bead1cbfa50fb934da77e3acdbc2908a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spr: {fileID: 8050812612465737753}
+  isMyTeam: 0
+  unitData: {fileID: 0}
   canvas: {fileID: 1229507686348804346}
   delayBar: {fileID: 1495274319}
-  unitData:
-    cord: 0
-    cost: 0
-    name: 
-    moveSpeed: 0
-    attackSpeed: 0
-    range: 0
-    sprite: {fileID: 0}
-  isMyTeam: 0
-  battleManager: {fileID: 0}
 --- !u!1 &7400524376483032631
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,14 +12,10 @@ public class UnitDataSO : ScriptableObject
 }
 
 [System.Serializable]
-public class UnitData
+public class UnitData : DataBase
 {
-    public int cord;
     public int cost;
-    public string name;
-    public int hp;
     public float moveSpeed;
     public float attackSpeed;
     public float range;
-    public Sprite sprite;
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Pencil_State : UnitState
+public class Pencil_State : Stationary_UnitState
 {
-    public Pencil_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
-
+        this.myUnit = myUnit;
     }
 
     public override void Enter()
@@ -29,7 +29,7 @@ public class Pencil_State : UnitState
 
 public class Pencil_Idle_State : Pencil_State
 {
-    public Pencil_Idle_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Idle_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
     }
 
@@ -52,7 +52,7 @@ public class Pencil_Idle_State : Pencil_State
 public class Pencil_Wait_State : Pencil_State
 {
     private float waitTime;
-    public Pencil_Wait_State(Transform myTrm, Transform mySprTrm, Unit myUnit, float waitTime) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Wait_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, float waitTime) : base(myTrm, mySprTrm, myUnit)
     {
         this.waitTime = waitTime;
     }
@@ -71,7 +71,7 @@ public class Pencil_Wait_State : Pencil_State
 
 public class Pencil_Move_State : Pencil_State
 {
-    public Pencil_Move_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Move_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
     }
 
@@ -130,7 +130,7 @@ public class Pencil_Attack_State : Pencil_State
     private Unit targetUnit;
     private float cur_delay = 0;
     private float max_delay = 100;
-    public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Unit myUnit, Unit targetUnit) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit targetUnit) : base(myTrm, mySprTrm, myUnit)
     {
         this.targetUnit = targetUnit;
     }
@@ -192,7 +192,7 @@ public class Pencil_Damaged_State : Pencil_State
     private float knockback;
     private int damaged;
     private Unit attacker;
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Unit myUnit, Unit attacker, int damaged, float knockback) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, float knockback) : base(myTrm, mySprTrm, myUnit)
     {
         this.damaged = damaged;
         this.knockback = knockback;
@@ -221,7 +221,7 @@ public class Pencil_Damaged_State : Pencil_State
 
 public class Pencil_Die_State : Pencil_State
 {
-    public Pencil_Die_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Die_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
     }
 
@@ -229,7 +229,7 @@ public class Pencil_Die_State : Pencil_State
     {
         //µÚÁü
         Debug.Log("µÚÁü");
-        myUnit.Pool_Unit();
+        myUnit.Delete_Unit();
         base.Enter();
     }
 

@@ -22,8 +22,8 @@ public class Battle_Unit : BattleCommand
 
     public void Summon_Unit(UnitData unitData, Vector3 Pos)
     {
-        Unit unit = Pool_Unit(Pos);
-        unit.Set_UnitData(unitData, isMyTeam, battleManager);
+        Stationary_Unit unit = Pool_Unit(Pos);
+        unit.Set_Stationary_UnitData(unitData, isMyTeam, battleManager);
 
         if(isMyTeam)
         {
@@ -46,7 +46,7 @@ public class Battle_Unit : BattleCommand
         unit_AfterImage.SetActive(true);
     }
 
-    private Unit Pool_Unit(Vector3 Pos)
+    private Stationary_Unit Pool_Unit(Vector3 Pos)
     {
         GameObject unit_obj = null;
         if (unit_PoolManager.childCount > 0)
@@ -57,6 +57,16 @@ public class Battle_Unit : BattleCommand
         }
         unit_obj ??= battleManager.Create_Object(unit_Prefeb, Pos, Quaternion.identity);
         unit_obj.transform.SetParent(unit_Parent);
-        return unit_obj.GetComponent<Unit>();
+        return unit_obj.GetComponent<Stationary_Unit>();
+    }
+
+    public void Add_UnitListMy(Unit unit)
+    {
+        battleManager.unitMyDatasTemp.Add(unit);
+    }
+
+    public void Add_UnitListEnemy(Unit unit)
+    {
+        battleManager.unitEnemyDatasTemp.Add(unit);
     }
 }

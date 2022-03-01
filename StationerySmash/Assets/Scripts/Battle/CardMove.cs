@@ -69,7 +69,7 @@ public class CardMove : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDo
 
         this.id = id;
         this.unitData = unitData;
-        card_Name.text = unitData.name;
+        card_Name.text = unitData.unitName;
         card_UnitCost.text = unitData.cost.ToString();
         card_UnitImage.sprite = unitData.sprite;
         grade = 0;
