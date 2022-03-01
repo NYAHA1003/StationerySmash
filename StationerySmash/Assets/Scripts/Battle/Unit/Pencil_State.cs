@@ -108,6 +108,15 @@ public class Pencil_Move_State : Pencil_State
         {
             if (list[i].transform.position.sqrMagnitude < targetRange)
             {
+                if (myUnit.isMyTeam && myTrm.position.x > list[i].transform.position.x)
+                {
+                    continue;
+                }
+                if (!myUnit.isMyTeam && myTrm.position.x < list[i].transform.position.x)
+                {
+                    continue;
+                }
+
                 targetUnit = list[i];
                 targetRange = targetUnit.transform.position.sqrMagnitude;
             }
@@ -180,6 +189,20 @@ public class Pencil_Attack_State : Pencil_State
             {
                 nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
                 curEvent = eEvent.EXIT;
+                return;
+            }
+
+            if (myUnit.isMyTeam && myTrm.position.x > targetUnit.transform.position.x)
+            {
+                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+                curEvent = eEvent.EXIT;
+                return;
+            }
+            if (!myUnit.isMyTeam && myTrm.position.x < targetUnit.transform.position.x)
+            {
+                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+                curEvent = eEvent.EXIT;
+                return;
             }
         }
     }
@@ -255,7 +278,12 @@ public class Pencil_Throw_State : Pencil_State
 
     public override void Enter()
     {
-        myTrm.DOJump(new Vector3(myTrm.position.x - Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 0, myTrm.position.z), 1, 1, 1);
+        myTrm.DOJump(new Vector3(myTrm.position.x - Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 0, myTrm.position.z), 1, 1, 1).OnComplete(() =>
+        {
+            curEvent = eEvent.EXIT;
+        });
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.3f);
+        
         base.Enter();
     }
 }

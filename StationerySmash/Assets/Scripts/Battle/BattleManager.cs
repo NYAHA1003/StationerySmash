@@ -179,7 +179,7 @@ public class BattleManager : MonoBehaviour
 
         if (throw_Unit != null)
         {
-            if (Vector2.Distance(pos, throw_Unit.transform.position) < 1)
+            if (Vector2.Distance(pos, throw_Unit.transform.position) < 0.1f)
             {
                 throw_Unit.Pull_Unit();
                 return;
