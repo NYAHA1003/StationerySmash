@@ -210,7 +210,11 @@ public class Pencil_Damaged_State : Pencil_State
     public override void Update()
     {
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.2f);
-        curEvent = eEvent.EXIT;    
+        if (myUnit.hp <= 0 )
+        {
+            nextState = new Pencil_Die_State(myTrm, mySprTrm, myUnit);
+        }
+        curEvent = eEvent.EXIT;
     }
 }
 
@@ -219,4 +223,13 @@ public class Pencil_Die_State : Pencil_State
     public Pencil_Die_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
     }
+
+    public override void Enter()
+    {
+        //µÚÁü
+        Debug.Log("µÚÁü");
+        myUnit.Pool_Unit();
+        base.Enter();
+    }
+
 }

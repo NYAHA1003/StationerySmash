@@ -42,6 +42,7 @@ public class Unit : MonoBehaviour
     public void Set_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
     {
         transform.name = unitData.cord + (isMyTeam ? "¾Æ±º":"Àû");
+        attack_Cur_Delay = 0;
         this.unitData = unitData;
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
@@ -54,6 +55,11 @@ public class Unit : MonoBehaviour
         unitState = new Pencil_State(transform, spr.transform, this);
 
         isSettingEnd = true;
+    }
+
+    public void Pool_Unit()
+    {
+        battleManager.Pool_Unit(this);
     }
 
     public void Update_DelayBar(float delay)

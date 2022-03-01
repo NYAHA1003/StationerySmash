@@ -127,6 +127,12 @@ public class BattleManager : MonoBehaviour
         teamText.text = battle_Unit.isMyTeam ? "³ªÀÇ ÆÀ" : "»ó´ë ÆÀ";
     }
 
+    public void Pool_Unit(Unit unit)
+    {
+        unit.gameObject.SetActive(false);
+        unit.transform.SetParent(unit_PoolManager);
+    }
+
     #endregion
 
 }
