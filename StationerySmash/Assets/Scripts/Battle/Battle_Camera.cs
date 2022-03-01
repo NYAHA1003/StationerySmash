@@ -23,8 +23,29 @@ public class Battle_Camera : BattleCommand
         isCameraMove = isboolean;
     }
 
+    public void Update_CameraScale()
+    {
+        if(Input.GetKey(KeyCode.UpArrow))
+        {
+            camera.orthographicSize += 0.1f;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            camera.orthographicSize -= 0.1f;
+        }
+        if (Input.touchCount != 2)
+        {
+            return;
+        }
+    }
+
     public void Update_CameraPos()
     {
+        //if(Input.touchCount != 1)
+        //{
+        //    return;
+        //}
+
         //카드를 클릭한 상태라면
         if(battleManager.battle_Card.isCardDown)
         {

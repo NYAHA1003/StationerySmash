@@ -111,8 +111,9 @@ public class BattleManager : MonoBehaviour
     private void Update()
     {
         battle_Camera.Update_CameraPos();
+        battle_Camera.Update_CameraScale();
 
-        if(Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             battle_Card.Add_OneCard();
         }
