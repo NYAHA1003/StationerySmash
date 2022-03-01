@@ -17,6 +17,7 @@ public class UnitData
     public int cord;
     public int cost;
     public string name;
+    public int hp;
     public float moveSpeed;
     public float attackSpeed;
     public float range;

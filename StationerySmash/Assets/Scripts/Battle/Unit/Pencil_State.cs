@@ -154,7 +154,7 @@ public class Pencil_Attack_State : Pencil_State
 
     private void Attack()
     {
-        Debug.Log("공격");
+        targetUnit.Run_Damaged(myUnit, 10, 10);
         nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
         curEvent = eEvent.EXIT;
     }
@@ -176,8 +176,27 @@ public class Pencil_Attack_State : Pencil_State
 
 public class Pencil_Damaged_State : Pencil_State
 {
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    private float knockback;
+    private int damaged;
+    private Unit attacker;
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Unit myUnit, Unit attacker, int damaged, float knockback) : base(myTrm, mySprTrm, myUnit)
     {
+        this.damaged = damaged;
+        this.knockback = knockback;
+        this.attacker = attacker;
+    }
+
+    public override void Enter()
+    {
+        //데미지 입음
+        Debug.Log(attacker.name + "가 " + myUnit.name + "를 공격함");
+        base.Enter();
+    }
+
+    public override void Update()
+    {
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.2f);
+        curEvent = eEvent.EXIT;    
     }
 }
 

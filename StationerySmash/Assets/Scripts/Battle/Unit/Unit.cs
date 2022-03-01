@@ -15,9 +15,11 @@ public class Unit : MonoBehaviour
     [SerializeField]
     private Image delayBar;
 
+
     public UnitData unitData;
 
     private bool isSettingEnd;
+    private int hp;
     public bool isMyTeam;
 
     public BattleManager battleManager;
@@ -45,7 +47,7 @@ public class Unit : MonoBehaviour
         this.battleManager = battleManager;
         canvas.worldCamera = mainCam;
         delayBar.rectTransform.anchoredPosition = isMyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
-
+        hp = unitData.hp;
 
         unitState = new Pencil_State(transform, spr.transform, this);
 
@@ -55,5 +57,10 @@ public class Unit : MonoBehaviour
     public void Update_DelayBar(float delay)
     {
         delayBar.fillAmount = delay;
+    }
+
+    public void Run_Damaged(Unit attacker, int damage, float knockback)
+    {
+        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, knockback);
     }
 }

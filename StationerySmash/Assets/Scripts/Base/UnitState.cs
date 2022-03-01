@@ -33,8 +33,6 @@ public class UnitState
         myUnitData = myUnit.unitData;
     }
 
-
-
     public virtual void Enter() { curEvent = eEvent.UPDATE; }
     public virtual void Update() { curEvent = eEvent.UPDATE; }
     public virtual void Exit() { curEvent = eEvent.EXIT; }
