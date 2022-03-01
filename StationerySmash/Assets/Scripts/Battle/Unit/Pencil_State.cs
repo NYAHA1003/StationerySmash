@@ -160,6 +160,7 @@ public class Pencil_Attack_State : Pencil_State
     {
         cur_delay = 0;
         Set_Delay();
+        myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
         targetUnit.Run_Damaged(myUnit, 10, 1);
         nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
         curEvent = eEvent.EXIT;

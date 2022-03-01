@@ -82,11 +82,21 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    #region 이펙트 시스템 Battle_Effect
+
+    public Battle_Effect battle_Effect { get; private set; }
+    [SerializeField]
+    private Transform effect_PoolManager;
+
+
+    #endregion
+
+    private void Awake()
     {
         battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
         battle_Camera = new Battle_Camera(this, main_Cam);
         battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent, unit_AfterImage);
+        battle_Effect = new Battle_Effect(this, effect_PoolManager);
     }
 
     private void Update()
