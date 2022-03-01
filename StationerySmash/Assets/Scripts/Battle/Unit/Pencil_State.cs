@@ -81,13 +81,13 @@ public class Pencil_Move_State : Pencil_State
         if(myUnit.isMyTeam)
         {
             Move_MyTeam();
-            Check_Range(myUnit.battleManager.unitEnemyDatasTemp);
+            Check_Range(myUnit.battleManager.unit_EnemyDatasTemp);
             return;
         }
 
         //»ó´ë ÆÀ
         Move_EnemyTeam();
-        Check_Range(myUnit.battleManager.unitMyDatasTemp);
+        Check_Range(myUnit.battleManager.unit_MyDatasTemp);
     }
 
     private void Move_MyTeam()
@@ -233,4 +233,29 @@ public class Pencil_Die_State : Pencil_State
         base.Enter();
     }
 
+}
+
+public class Pencil_Pull_State : Pencil_State
+{
+    public Pencil_Pull_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    {
+    }
+
+    public override void Enter()
+    {
+        nextState = new Pencil_Pull_State(myTrm, mySprTrm, myUnit);
+    }
+}
+
+public class Pencil_Throw_State : Pencil_State
+{
+    public Pencil_Throw_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
+    {
+    }
+
+    public override void Enter()
+    {
+        myTrm.DOJump(new Vector3(myTrm.position.x - Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 0, myTrm.position.z), 1, 1, 1);
+        base.Enter();
+    }
 }

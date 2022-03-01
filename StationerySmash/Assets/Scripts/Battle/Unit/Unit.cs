@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour
 
     public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager)
     {
-        transform.name = unitData.cord + (isMyTeam ? "아군":"적");
+        transform.name = unitData.cord + unitData.unitName + (isMyTeam ? "아군":"적");
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
@@ -45,5 +45,13 @@ public class Unit : MonoBehaviour
     public void Subtract_HP(int damage)
     {
         hp -= damage;
+    }
+    public virtual void Pull_Unit()
+    {
+    }
+
+    public virtual void Throw_Unit()
+    {
+
     }
 }

@@ -1036,20 +1036,20 @@ MonoBehaviour:
   unitDataSO: {fileID: 11400000, guid: 196a1c2a611bf814194df094e01de64f, type: 2}
   pencilCaseDataSO: {fileID: 11400000, guid: f01a54e311513354a8fcd4f29e0676a4, type: 2}
   stageDataSO: {fileID: 11400000, guid: a930bac7dd6fe314a9d2c68dd5b3deef, type: 2}
-  cardDatasTemp: []
-  cardMove_Prefeb: {fileID: 1637879170446956799, guid: 8826a6084291dae4ab520c6869beb819, type: 3}
+  card_DatasTemp: []
+  card_cardMove_Prefeb: {fileID: 1637879170446956799, guid: 8826a6084291dae4ab520c6869beb819, type: 3}
   card_PoolManager: {fileID: 1788391718}
   card_Canvas: {fileID: 328308598}
   card_SpawnPosition: {fileID: 15836575}
   card_LeftPosition: {fileID: 1489626588}
   card_RightPosition: {fileID: 2050583622}
-  unitMyDatasTemp: []
-  unitEnemyDatasTemp: []
+  unit_MyDatasTemp: []
+  unit_EnemyDatasTemp: []
   unit_Prefeb: {fileID: 636465713026102458, guid: 255f6e8226be8b545a784f4db6787063, type: 3}
   unit_PoolManager: {fileID: 1213032192}
   unit_Parent: {fileID: 1681970528}
   unit_AfterImage: {fileID: 1551840266}
-  teamText: {fileID: 1544231457}
+  unit_teamText: {fileID: 1544231457}
   main_Cam: {fileID: 1586630335}
   effect_PoolManager: {fileID: 660203832}
 --- !u!1001 &1660374184

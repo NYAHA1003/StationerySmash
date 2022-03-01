@@ -44,10 +44,10 @@ public class Stationary_Unit : Unit
 
         if(isMyTeam)
         {
-            battleManager.unitMyDatasTemp.Remove(this);
+            battleManager.unit_MyDatasTemp.Remove(this);
             return;
         }
-        battleManager.unitEnemyDatasTemp.Remove(this);
+        battleManager.unit_EnemyDatasTemp.Remove(this);
     }
 
     public override void Run_Damaged(Unit attacker, int damage, float knockback)
@@ -55,4 +55,14 @@ public class Stationary_Unit : Unit
         unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, knockback);
     }
 
+    public override void Pull_Unit()
+    {
+        battleManager.battle_Camera.Set_CameraMove(false);
+        unitState = new Pencil_Pull_State(transform, spr.transform, this);
+    }
+
+    public override void Throw_Unit()
+    {
+        unitState = new Pencil_Throw_State(transform, spr.transform, this);
+    }
 }

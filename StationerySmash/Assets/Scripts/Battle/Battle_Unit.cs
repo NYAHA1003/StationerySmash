@@ -27,10 +27,10 @@ public class Battle_Unit : BattleCommand
 
         if(isMyTeam)
         {
-            battleManager.unitMyDatasTemp.Add(unit);
+            battleManager.unit_MyDatasTemp.Add(unit);
             return;
         }
-        battleManager.unitEnemyDatasTemp.Add(unit);
+        battleManager.unit_EnemyDatasTemp.Add(unit);
     }
 
     public void Set_UnitAfterImage(UnitData unitData, Vector3 Pos, bool isDelete = false)
@@ -62,11 +62,11 @@ public class Battle_Unit : BattleCommand
 
     public void Add_UnitListMy(Unit unit)
     {
-        battleManager.unitMyDatasTemp.Add(unit);
+        battleManager.unit_MyDatasTemp.Add(unit);
     }
 
     public void Add_UnitListEnemy(Unit unit)
     {
-        battleManager.unitEnemyDatasTemp.Add(unit);
+        battleManager.unit_EnemyDatasTemp.Add(unit);
     }
 }

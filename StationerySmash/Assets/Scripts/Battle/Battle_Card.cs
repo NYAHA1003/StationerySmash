@@ -56,7 +56,7 @@ public class Battle_Card : BattleCommand
 
         CardMove cardmove = Pool_Card();
         cardmove.Set_UnitData(unitDataSO.unitDatas[random], idCount++);
-        battleManager.cardDatasTemp.Add(cardmove);
+        battleManager.card_DatasTemp.Add(cardmove);
 
         Sort_Card();
         Fusion_DelayCard();
@@ -93,11 +93,11 @@ public class Battle_Card : BattleCommand
     public void Sort_Card()
     {
         List<PRS> originCardPRS = new List<PRS>();
-        originCardPRS = Return_RoundPRS(battleManager.cardDatasTemp.Count, 800, 600);
+        originCardPRS = Return_RoundPRS(battleManager.card_DatasTemp.Count, 800, 600);
 
-        for (int i = 0; i < battleManager.cardDatasTemp.Count; i++)
+        for (int i = 0; i < battleManager.card_DatasTemp.Count; i++)
         {
-            CardMove targetCard = battleManager.cardDatasTemp[i];
+            CardMove targetCard = battleManager.card_DatasTemp[i];
             targetCard.originPRS = originCardPRS[i];
             targetCard.Set_CardPRS(targetCard.originPRS, 0.5f);
         }
@@ -157,11 +157,11 @@ public class Battle_Card : BattleCommand
     private void Fusion_Card()
     {
         if (isDrow) return;
-        for (int i = 0; i < battleManager.cardDatasTemp.Count - 1; i++)
+        for (int i = 0; i < battleManager.card_DatasTemp.Count - 1; i++)
         {
-            if (battleManager.cardDatasTemp[i].unitData.cord == battleManager.cardDatasTemp[i + 1].unitData.cord)
+            if (battleManager.card_DatasTemp[i].unitData.cord == battleManager.card_DatasTemp[i + 1].unitData.cord)
             {
-                if (battleManager.cardDatasTemp[i].grade == battleManager.cardDatasTemp[i + 1].grade)
+                if (battleManager.card_DatasTemp[i].grade == battleManager.card_DatasTemp[i + 1].grade)
                 {
                     coroutine = battleManager.StartCoroutine(Fusion_Move(i));
                     isDrow = true;
@@ -175,14 +175,14 @@ public class Battle_Card : BattleCommand
 
     private IEnumerator Fusion_Move(int index)
     {
-        battleManager.cardDatasTemp[index + 1].Set_CardPRS(battleManager.cardDatasTemp[index].originPRS, 0.3f);
-        battleManager.cardDatasTemp[index].Fusion_FadeInEffect();
-        battleManager.cardDatasTemp[index + 1].Fusion_FadeInEffect();
+        battleManager.card_DatasTemp[index + 1].Set_CardPRS(battleManager.card_DatasTemp[index].originPRS, 0.3f);
+        battleManager.card_DatasTemp[index].Fusion_FadeInEffect();
+        battleManager.card_DatasTemp[index + 1].Fusion_FadeInEffect();
 
         yield return new WaitForSeconds(0.3f);
         
-        battleManager.cardDatasTemp[index].Fusion_FadeOutEffect();
-        battleManager.cardDatasTemp[index].Upgrade_UnitGrade();
+        battleManager.card_DatasTemp[index].Fusion_FadeOutEffect();
+        battleManager.card_DatasTemp[index].Upgrade_UnitGrade();
         
         Subtract_CardAt(index + 1);
         Sort_Card();
@@ -222,9 +222,9 @@ public class Battle_Card : BattleCommand
             return;
 
         cur_Card--;
-        battleManager.cardDatasTemp[index].transform.SetParent(card_PoolManager);
-        battleManager.cardDatasTemp[index].gameObject.SetActive(false);
-        battleManager.cardDatasTemp.RemoveAt(index);
+        battleManager.card_DatasTemp[index].transform.SetParent(card_PoolManager);
+        battleManager.card_DatasTemp[index].gameObject.SetActive(false);
+        battleManager.card_DatasTemp.RemoveAt(index);
         Sort_Card();
 
         Fusion_DelayCard();
@@ -278,7 +278,7 @@ public class Battle_Card : BattleCommand
     {
         if (isFusion) return;
         if (isDrow) return;
-        Subtract_CardAt(battleManager.cardDatasTemp.FindIndex(x => x.id == card.id));
+        Subtract_CardAt(battleManager.card_DatasTemp.FindIndex(x => x.id == card.id));
         isCardDown = false;
 
         //¿Ø¥÷ º“»Ø

@@ -35,9 +35,9 @@ public class BattleManager : MonoBehaviour
 
     [Header("카드시스템 Battle_Card")]
     [Space(30)]
-    public List<CardMove> cardDatasTemp;
+    public List<CardMove> card_DatasTemp;
     [SerializeField]
-    private GameObject cardMove_Prefeb;
+    private GameObject card_cardMove_Prefeb;
     [SerializeField]
     private Transform card_PoolManager;
     [SerializeField]
@@ -57,8 +57,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("유닛시스템 Battle_Unit")]
     [Space(30)]
-    public List<Unit> unitMyDatasTemp;
-    public List<Unit> unitEnemyDatasTemp;
+    public List<Unit> unit_MyDatasTemp;
+    public List<Unit> unit_EnemyDatasTemp;
     [SerializeField]
     private GameObject unit_Prefeb;
     [SerializeField]
@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private GameObject unit_AfterImage;
 
-    public TextMeshProUGUI teamText;
+    public TextMeshProUGUI unit_teamText;
 
     #endregion
 
@@ -94,9 +94,15 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    #region 던지기 시스템 Battle_Throw
+
+    private Unit throw_Unit;
+
+    #endregion
+
     private void Awake()
     {
-        battle_Card = new Battle_Card(this, unitDataSO, cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
+        battle_Card = new Battle_Card(this, unitDataSO, card_cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);
         battle_Camera = new Battle_Camera(this, main_Cam);
         battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent, unit_AfterImage);
         battle_Effect = new Battle_Effect(this, effect_PoolManager);
@@ -122,6 +128,15 @@ public class BattleManager : MonoBehaviour
         {
             battle_Card.Subtract_Card();
         }
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            Pull_TouchUnit(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            Throw_Unit();
+        }
     }
 
     #region 공용함수
@@ -137,7 +152,7 @@ public class BattleManager : MonoBehaviour
     public void Change_Team()
     {
         battle_Unit.isMyTeam = !battle_Unit.isMyTeam;
-        teamText.text = battle_Unit.isMyTeam ? "나의 팀" : "상대 팀";
+        unit_teamText.text = battle_Unit.isMyTeam ? "나의 팀" : "상대 팀";
     }
 
     public void Pool_Unit(Unit unit)
@@ -148,4 +163,40 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    #region 던지기 시스템
+
+    public void Pull_TouchUnit(Vector2 pos)
+    {
+        float targetRange = float.MaxValue;
+        for (int i = 0; i < unit_MyDatasTemp.Count; i++)
+        {
+            if (unit_MyDatasTemp[i].transform.position.sqrMagnitude < targetRange)
+            {
+                throw_Unit = unit_MyDatasTemp[i];
+                targetRange = throw_Unit.transform.position.sqrMagnitude;
+            }
+        }
+
+        if (throw_Unit != null)
+        {
+            if (Vector2.Distance(pos, throw_Unit.transform.position) < 1)
+            {
+                throw_Unit.Pull_Unit();
+                return;
+            }
+            throw_Unit = null;
+        }
+
+    }
+
+    public void Throw_Unit()
+    {
+        if(throw_Unit != null)
+        {
+            throw_Unit.Throw_Unit();
+            throw_Unit = null;
+        }
+    }
+
+    #endregion
 }

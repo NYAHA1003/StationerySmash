@@ -18,6 +18,11 @@ public class Battle_Camera : BattleCommand
         this.camera = camera;
     }
 
+    public void Set_CameraMove(bool isboolean)
+    {
+        isCameraMove = isboolean;
+    }
+
     public void Update_CameraPos()
     {
         //카드를 클릭한 상태라면
