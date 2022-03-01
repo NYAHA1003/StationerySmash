@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Pencil_State : UnitState
 {
@@ -127,7 +128,7 @@ public class Pencil_Move_State : Pencil_State
 public class Pencil_Attack_State : Pencil_State
 {
     private Unit targetUnit;
-    private float cur_delay;
+    private float cur_delay = 0;
     private float max_delay = 100;
     public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Unit myUnit, Unit targetUnit) : base(myTrm, mySprTrm, myUnit)
     {
@@ -136,27 +137,38 @@ public class Pencil_Attack_State : Pencil_State
 
     public override void Enter()
     {
-        Debug.Log("공격모드");
-        cur_delay = 0;
+        cur_delay = myUnit.attack_Cur_Delay;
         base.Enter();
     }
     public override void Update()
     {
+        //상대와의 거리 체크
         Check_Range();
+
+        //쿨타임 감소
         if(max_delay >= cur_delay)
         {
             cur_delay += myUnitData.attackSpeed * Time.deltaTime;
-            myUnit.Update_DelayBar(cur_delay / max_delay);
+            Set_Delay();
             return;
         }
+
         Attack();
     }
 
     private void Attack()
     {
-        targetUnit.Run_Damaged(myUnit, 10, 10);
+        cur_delay = 0;
+        Set_Delay();
+        targetUnit.Run_Damaged(myUnit, 10, 1);
         nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
         curEvent = eEvent.EXIT;
+    }
+
+    private void Set_Delay()
+    {
+        myUnit.Update_DelayBar(cur_delay / max_delay);
+        myUnit.Set_AttackDelay(cur_delay);
     }
 
     private void Check_Range()
@@ -189,7 +201,9 @@ public class Pencil_Damaged_State : Pencil_State
     public override void Enter()
     {
         //데미지 입음
-        Debug.Log(attacker.name + "가 " + myUnit.name + "를 공격함");
+        myUnit.Subtract_HP(damaged);
+        myTrm.DOJump(new Vector3(myTrm.position.x - (myUnit.isMyTeam ? knockback : -knockback), 0, myTrm.position.z), 1, 1, 0.2f);
+        Debug.Log(myUnit.name + "의 체력 : " + myUnit.hp);
         base.Enter();
     }
 

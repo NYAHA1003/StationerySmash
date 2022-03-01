@@ -19,7 +19,8 @@ public class Unit : MonoBehaviour
     public UnitData unitData;
 
     private bool isSettingEnd;
-    private int hp;
+    public int hp { get; private set; } = 100;
+    public float attack_Cur_Delay { get; private set; }
     public bool isMyTeam;
 
     public BattleManager battleManager;
@@ -40,6 +41,7 @@ public class Unit : MonoBehaviour
 
     public void Set_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
     {
+        transform.name = unitData.cord + (isMyTeam ? "¾Æ±º":"Àû");
         this.unitData = unitData;
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
@@ -62,5 +64,15 @@ public class Unit : MonoBehaviour
     public void Run_Damaged(Unit attacker, int damage, float knockback)
     {
         unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, knockback);
+    }
+
+    public void Set_AttackDelay(float delay)
+    {
+        attack_Cur_Delay = delay;
+    }
+
+    public void Subtract_HP(int damage)
+    {
+        hp -= damage;
     }
 }
