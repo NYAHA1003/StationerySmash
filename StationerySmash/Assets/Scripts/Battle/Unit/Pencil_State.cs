@@ -17,8 +17,7 @@ public class Pencil_State : Stationary_UnitState
 
     public override void Update()
     {
-        nextState = new Pencil_Idle_State(myTrm, mySprTrm, myUnit);
-        curEvent = eEvent.EXIT;
+        base.Update();
     }
 
     public override void Exit()
@@ -278,11 +277,13 @@ public class Pencil_Throw_State : Pencil_State
 
     public override void Enter()
     {
-        myTrm.DOJump(new Vector3(myTrm.position.x - Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 0, myTrm.position.z), 1, 1, 1).OnComplete(() =>
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float jumpPower = myTrm.position.y - mousePos.y < 0 ? 0 : myTrm.position.y - mousePos.y;
+        myTrm.DOJump(new Vector3(myTrm.position.x - mousePos.x, 0, myTrm.position.z), jumpPower, 1, 1).OnComplete(() =>
         {
+            nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
         });
-        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.3f);
         
         base.Enter();
     }

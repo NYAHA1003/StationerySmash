@@ -24,7 +24,7 @@ public class Stationary_Unit : Unit
     public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
     {
         this.unitData = unitData;
-        unitState = new Pencil_State(transform, spr.transform, this);
+        unitState = new Pencil_Idle_State(transform, spr.transform, this);
 
         Set_UnitData(unitData, isMyTeam, battleManager);
     }
