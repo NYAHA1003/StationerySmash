@@ -115,6 +115,10 @@ public class Pencil_Move_State : Pencil_State
                 {
                     continue;
                 }
+                if(list[i].transform.position.y > myTrm.transform.position.y)
+                {
+                    continue;
+                }
 
                 targetUnit = list[i];
                 targetRange = targetUnit.transform.position.sqrMagnitude;
@@ -169,8 +173,8 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        targetUnit.Run_Damaged(myUnit, 10, 1);
-        nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback);
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
     }
 
@@ -186,24 +190,32 @@ public class Pencil_Attack_State : Pencil_State
         {
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) > myUnitData.range)
             {
-                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
-                curEvent = eEvent.EXIT;
+                Set_Move();
                 return;
             }
 
             if (myUnit.isMyTeam && myTrm.position.x > targetUnit.transform.position.x)
             {
-                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
-                curEvent = eEvent.EXIT;
+                Set_Move();
                 return;
             }
             if (!myUnit.isMyTeam && myTrm.position.x < targetUnit.transform.position.x)
             {
-                nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
-                curEvent = eEvent.EXIT;
+                Set_Move();
+                return;
+            }
+            if(targetUnit.transform.position.y > myTrm.position.y)
+            {
+                Set_Move();
                 return;
             }
         }
+    }
+
+    private void Set_Move()
+    {
+        nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+        curEvent = eEvent.EXIT;
     }
 }
 
@@ -225,9 +237,16 @@ public class Pencil_Damaged_State : Pencil_State
     {
         //데미지 입음
         myUnit.Subtract_HP(damaged);
-        myTrm.DOJump(new Vector3(myTrm.position.x - (myUnit.isMyTeam ? knockback : -knockback), 0, myTrm.position.z), 1, 1, 0.2f);
+        KnockBack();
         Debug.Log(myUnit.name + "의 체력 : " + myUnit.hp);
         base.Enter();
+    }
+
+    private void KnockBack()
+    {
+        float calculated_knockback = (knockback / (myUnitData.weight * (((float)myUnit.hp / myUnit.maxhp) + 0.1f))) * (myUnit.isMyTeam ? 1 : -1);
+        Debug.Log(calculated_knockback);
+        myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), 0.3f, 1, 0.2f);
     }
 
     public override void Update()
@@ -286,5 +305,27 @@ public class Pencil_Throw_State : Pencil_State
         });
         
         base.Enter();
+    }
+
+    public override void Update()
+    {
+        if(myUnit.isMyTeam)
+        {
+            Check_Collide(myUnit.battleManager.unit_EnemyDatasTemp);
+            return;
+        }
+        Check_Collide(myUnit.battleManager.unit_MyDatasTemp);
+    }
+    private void Check_Collide(List<Unit> list)
+    {
+        Unit targetUnit = null;
+        for (int i = 0; i < list.Count; i++)
+        {
+            targetUnit = list[i];
+            if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < 0.2f)
+            {
+                targetUnit.Run_Damaged(myUnit, 10, 1);
+            }
+        }
     }
 }

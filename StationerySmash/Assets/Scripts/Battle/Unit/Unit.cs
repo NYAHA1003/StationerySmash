@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour
 
     protected bool isSettingEnd;
     public int hp { get; protected set; } = 100;
+    public int maxhp { get; protected set; }
     public bool isMyTeam;
 
     public BattleManager battleManager { get; protected set; }
@@ -32,8 +33,10 @@ public class Unit : MonoBehaviour
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
         this.battleManager = battleManager;
+        maxhp = unitData.hp;
         hp = unitData.hp;
         
+
         isSettingEnd = true;
     }
 
