@@ -101,6 +101,8 @@ public class BattleManager : MonoBehaviour
     [Space(30)]
     [SerializeField]
     private LineRenderer throw_parabola;
+    [SerializeField]
+    private Transform throw_Arrow;
 
     #endregion
 
@@ -110,7 +112,7 @@ public class BattleManager : MonoBehaviour
         battle_Camera = new Battle_Camera(this, main_Cam);
         battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent, unit_AfterImage);
         battle_Effect = new Battle_Effect(this, effect_PoolManager);
-        battle_Throw = new Battle_Throw(this, throw_parabola);
+        battle_Throw = new Battle_Throw(this, throw_parabola, throw_Arrow);
     }
 
     private void Update()
