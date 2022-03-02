@@ -45,20 +45,30 @@ public class Battle_Throw : BattleCommand
     {
         if(throw_Unit != null)
         {
+            //화살표
             arrow.transform.position = throw_Unit.transform.position;
-            direction = pos - (Vector2)throw_Unit.transform.position;
             arrow.transform.eulerAngles = new Vector3(0,0, Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg);
-            force = Mathf.Clamp(Vector2.Distance(throw_Unit.transform.position, pos), 0, 3) * 3;
-            float dir = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            
+            //방향
+            direction = pos - (Vector2)throw_Unit.transform.position;
+            //초기 벡터
+            force = Mathf.Clamp(Vector2.Distance(throw_Unit.transform.position, pos), 0, 3) * 2;
+            //방향을 라디안값으로 바꾼거
+            float dir = (Mathf.Atan2(-direction.y, -direction.x) - 90) * Mathf.Rad2Deg;
             dir *= Mathf.Deg2Rad;
 
+            //최고점
             float height = (force * force) * (Mathf.Sin(dir) * Mathf.Sin(dir)) / Mathf.Abs((Physics2D.gravity.y * 2));
+            //수평 도달 거리
             float width = ((force * force) * (Mathf.Sin(dir) * 2)) / Mathf.Abs(Physics2D.gravity.y);
+            //수평 도달 시간
+            float time = force * Mathf.Sin(dir) / Mathf.Abs(Physics2D.gravity.y);
+            time *= 2;
 
-            //Debug.Log(" 각도: " + dir * Mathf.Rad2Deg + " 최고점: " + height + " 이동거리: " + width);
+            //Debug.Log(" 각도: " + dir * Mathf.Rad2Deg + " 최고점: " + height + " 이동거리: " + width + " 시간: " + time);
 
 
-            List<Vector2> linePos = Set_ParabolaPos(parabola.positionCount, width, height);
+            List<Vector2> linePos = Set_ParabolaPos(parabola.positionCount, width, force, dir, time);
 
             for (int i = 0; i < parabola.positionCount; i++)
             {
@@ -67,27 +77,24 @@ public class Battle_Throw : BattleCommand
         }
     }
 
-    private List<Vector2> Set_ParabolaPos(int count, float width, float height)
+    private List<Vector2> Set_ParabolaPos(int count, float width, float force, float rad, float time)
     {
         List<Vector2> results = new List<Vector2>(count);
         float[] objLerps = new float[count];
+        float[] timeLerps = new float[count];
         float interbal = 1f / (count - 1 > 0 ? count - 1 : 1);
+        float timeInterbal = time / (count - 1 > 0 ? count - 1 : 1);
         for (int i = 0; i < count; i++)
         {
             objLerps[i] = interbal * i;
+            timeLerps[i] = timeInterbal * i;
         }
 
         for(int i = 0; i < count; i ++)
         {
             Vector3 pos = Vector3.Lerp((Vector2)throw_Unit.transform.position, new Vector2(throw_Unit.transform.position.x - width, 0), objLerps[i]);
-
-            if (objLerps[i] > 0.5f)
-            {
-                pos.y = Mathf.Lerp(height, 0, objLerps[i]) * 2;
-                results.Add(pos);
-                continue;
-            }
-            pos.y = Mathf.Lerp(0, height, objLerps[i]) * 2;
+            pos.y = (force * timeLerps[i] * Mathf.Sin(rad)) - (Mathf.Abs(Physics2D.gravity.y / 2)  * (timeLerps[i] * timeLerps[i]));
+            //Debug.Log(i + " / " + count + " 최종 시간: " + time + " 시간: " + timeLerps[i] + " 높이: " + (force * timeLerps[i] * Mathf.Sin(rad)) + " 뺄 높이: " + (Mathf.Abs(Physics2D.gravity.y / 2) * (timeLerps[i] * timeLerps[i])) + " 최종 높이: " + pos.y);
 
             results.Add(pos);
         }

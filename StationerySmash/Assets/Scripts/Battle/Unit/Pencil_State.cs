@@ -300,15 +300,17 @@ public class Pencil_Throw_State : Pencil_State
         float jumpPower = Mathf.Clamp(myTrm.position.y - mousePos.y, 0, 1f);
         float movePower = Mathf.Clamp(myTrm.position.x - mousePos.x, -1.5f, 1.5f);
         float resultPower = jumpPower + Mathf.Abs(movePower);
-        float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 3) * 3;
+        float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 3) * 2;
         Vector2 direction = mousePos - (Vector2)myTrm.transform.position;
-        float dir = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        float dir = (Mathf.Atan2(-direction.y, -direction.x) - 90) * Mathf.Rad2Deg;
         dir *= Mathf.Deg2Rad;
 
         float height = (force * force) * (Mathf.Sin(dir) * Mathf.Sin(dir)) / Mathf.Abs((Physics2D.gravity.y * 2));
         float width = ((force * force) * (Mathf.Sin(dir) * 2)) / Mathf.Abs(Physics2D.gravity.y);
+        float time = force * Mathf.Sin(dir) / Mathf.Abs(Physics2D.gravity.y);
+        time *= 2;
 
-        myTrm.DOJump(new Vector3(myTrm.position.x - width, 0, myTrm.position.z), height, 1, 1).OnComplete(() =>
+        myTrm.DOJump(new Vector3(myTrm.position.x - width, 0, myTrm.position.z), height, 1, time).OnComplete(() =>
         {
             nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
