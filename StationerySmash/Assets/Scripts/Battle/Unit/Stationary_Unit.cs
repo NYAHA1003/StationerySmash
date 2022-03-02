@@ -20,11 +20,13 @@ public class Stationary_Unit : Unit
     private void Awake()
     {
         mainCam = Camera.main;
+        canvas.worldCamera = mainCam;
     }
     public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
     {
         this.unitData = unitData;
         unitState = new Pencil_Idle_State(transform, spr.transform, this);
+        delayBar.rectTransform.anchoredPosition = isMyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
 
         Set_UnitData(unitData, isMyTeam, battleManager);
     }
