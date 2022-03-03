@@ -42,7 +42,7 @@ public class Unit : MonoBehaviour
     }
 
 
-    public virtual void Run_Damaged(Unit attacker, int damage, float knockback)
+    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir)
     {
     }
     public void Subtract_HP(int damage)

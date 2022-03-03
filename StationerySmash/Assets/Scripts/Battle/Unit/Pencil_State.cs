@@ -179,7 +179,7 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback);
+        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
@@ -229,13 +229,16 @@ public class Pencil_Attack_State : Pencil_State
 public class Pencil_Damaged_State : Pencil_State
 {
     private float knockback;
+    private float dir;
     private int damaged;
+
     private Unit attacker;
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, float knockback) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, float knockback, float dir) : base(myTrm, mySprTrm, myUnit)
     {
         curState = eState.DAMAGED;
         this.damaged = damaged;
         this.knockback = knockback;
+        this.dir = dir;
         this.attacker = attacker;
     }
 
@@ -251,7 +254,9 @@ public class Pencil_Damaged_State : Pencil_State
     private void KnockBack()
     {
         float calculated_knockback = (knockback / (myUnitData.weight * (((float)myUnit.hp / myUnit.maxhp) + 0.1f))) * (myUnit.isMyTeam ? 1 : -1);
-        myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), 0.3f, 1, 0.2f);
+        float height = Utill_Parabola.Caculated_Height(knockback * 0.15f, dir * Mathf.Deg2Rad);
+        float time = Utill_Parabola.Caculated_Time(knockback * 0.15f, dir * Mathf.Deg2Rad, 1);
+        myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), height, 1, time);
     }
 
     public override void Update()
@@ -356,7 +361,7 @@ public class Pencil_Throw_State : Pencil_State
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < 0.2f)
             {
                 Check_WeightDamage(targetUnit);
-                targetUnit.Run_Damaged(myUnit, 10, 1);
+                targetUnit.Run_Damaged(myUnit, 10, 1, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
             }
         }
     }
