@@ -183,7 +183,7 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir, 0);
+        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir, 0, AttackType.Normal);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
@@ -232,16 +232,18 @@ public class Pencil_Attack_State : Pencil_State
 
 public class Pencil_Damaged_State : Pencil_State
 {
+    private AttackType attackType;
     private KBData kbData;
     private int damaged;
 
     private Unit attacker;
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, KBData kbData) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, KBData kbData, AttackType attackType) : base(myTrm, mySprTrm, myUnit)
     {
         curState = eState.DAMAGED;
         this.kbData = kbData;
         this.damaged = damaged;
         this.attacker = attacker;
+        this.attackType = attackType;
     }
 
     public override void Enter()
@@ -265,7 +267,16 @@ public class Pencil_Damaged_State : Pencil_State
 
     public override void Update()
     {
-        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
+        switch (attackType)
+        {
+            case AttackType.Normal:
+                nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
+                break;
+            case AttackType.Stun:
+                break;
+        }
+        
+        
         if (myUnit.hp <= 0 )
         {
             nextState = new Pencil_Die_State(myTrm, mySprTrm, myUnit);
@@ -398,8 +409,8 @@ public class Pencil_Throw_State : Pencil_State
             float dir = Vector2.Angle((Vector2)myTrm.position, (Vector2)targetUnit.transform.position);
             float extraKnockBack = (targetUnit.weight - myUnitData.weight * (float)targetUnit.hp / targetUnit.maxhp) * 0.025f;
 
-            targetUnit.Run_Damaged(myUnit, 10, 10, 180 - dir, extraKnockBack);
-            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, new KBData(10, extraKnockBack, dir));
+            targetUnit.Run_Damaged(myUnit, 10, 10, 180 - dir, extraKnockBack, AttackType.Stun);
+            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, new KBData(10, extraKnockBack, dir), AttackType.Stun);
             curEvent = eEvent.EXIT;
 
             return;

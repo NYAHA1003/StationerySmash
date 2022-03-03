@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum AttackType
+{
+    Normal,
+    Stun,
+}
+
 public class Unit : MonoBehaviour 
 {
     protected UnitState unitState;
@@ -44,7 +51,7 @@ public class Unit : MonoBehaviour
     }
 
 
-    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback)
+    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback, AttackType attackType)
     {
     }
     public void Subtract_HP(int damage)

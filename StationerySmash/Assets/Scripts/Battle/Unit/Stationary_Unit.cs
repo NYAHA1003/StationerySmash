@@ -61,9 +61,9 @@ public class Stationary_Unit : Unit
         battleManager.unit_EnemyDatasTemp.Remove(this);
     }
 
-    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback)
+    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback, AttackType attackType)
     {
-        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, new KBData(knockback, extraKnockback, dir));
+        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, new KBData(knockback, extraKnockback, dir), attackType);
     }
 
     public override void Pull_Unit()
