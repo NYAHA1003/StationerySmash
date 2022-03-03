@@ -348,7 +348,7 @@ public class Pencil_Throw_State : Pencil_State
         {
             nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
-        }).SetEase(Ease.Linear);
+        }).SetEase(myUnit.curve);
         
         base.Enter();
     }
