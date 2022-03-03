@@ -59,13 +59,13 @@
     <Compile Include="Assets\Scripts\Base\BattleCommand.cs" />
     <Compile Include="Assets\Scripts\Battle\CardMove.cs" />
     <Compile Include="Assets\Scripts\Battle\Battle_Card.cs" />
+    <Compile Include="Assets\Scripts\Stage\StageManager.cs" />
     <Compile Include="Assets\Scripts\Base\Command.cs" />
     <Compile Include="Assets\Scripts\Base\UnitDataSO.cs" />
     <Compile Include="Assets\Scripts\Base\UnitState.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleManager.cs" />
     <Compile Include="Assets\Scripts\Text\TextSetting.cs" />
-    <Compile Include="Assets\Scripts\Stage\StageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

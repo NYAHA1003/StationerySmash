@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 public class StageManager : MonoBehaviour
 {
 
     [SerializeField]
     private GameObject selectArrow;
-    //[SerializeField]
-    //private GameObject[] chapter_GameObj;
     [SerializeField]
     private GameObject IndexPanel_GameObj;
-    //[SerializeField]
-    //private string[]
+    [SerializeField]
+    private GameObject StoryPanel_GameObj;
 
-    private bool isCheck = true;
+    private bool isCheckChapter = false;
+    private bool isCheckStoryMode = false;
+    private bool isCheckEventMode = false;
+
     void Start()
     {
         
@@ -25,15 +26,19 @@ public class StageManager : MonoBehaviour
     {
         
     }
-
+    public void StoryMode_Select()
+    {
+        isCheckChapter = !isCheckChapter;
+        IndexPanel_GameObj.SetActive(isCheckChapter);
+    }
+    public void EventMode_Select()
+    {
+        isCheckChapter = !isCheckChapter;
+        IndexPanel_GameObj.SetActive(isCheckChapter);
+    }
     public void Chapter_Select()
     {
-    //    if(isCheck)
-    //    {
-    //        IndexPanel_GameObj.SetActive(false);
-    //        isCheck = false;
-    //    }
-        IndexPanel_GameObj.SetActive(isCheck);
-        isCheck = !isCheck;
+        isCheckChapter = !isCheckChapter;
+        IndexPanel_GameObj.SetActive(isCheckChapter);
     }
 }
