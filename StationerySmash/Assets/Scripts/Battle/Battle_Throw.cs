@@ -83,7 +83,7 @@ public class Battle_Throw : BattleCommand
         }
     }
 
-    private List<Vector2> Set_ParabolaPos(int count, float width, float force, float rad, float time)
+    private List<Vector2> Set_ParabolaPos(int count, float width, float force, float dir_rad, float time)
     {
         List<Vector2> results = new List<Vector2>(count);
         float[] objLerps = new float[count];
@@ -99,7 +99,7 @@ public class Battle_Throw : BattleCommand
         for(int i = 0; i < count; i ++)
         {
             Vector3 pos = Vector3.Lerp((Vector2)throw_Unit.transform.position, new Vector2(throw_Unit.transform.position.x - width, 0), objLerps[i]);
-            pos.y = (force * timeLerps[i] * Mathf.Sin(rad)) - (Mathf.Abs(Physics2D.gravity.y / 2)  * (timeLerps[i] * timeLerps[i]));
+            pos.y = (force * timeLerps[i] * Mathf.Sin(dir_rad)) - (Mathf.Abs(Physics2D.gravity.y / 2)  * (timeLerps[i] * timeLerps[i]));
 
             results.Add(pos);
         }

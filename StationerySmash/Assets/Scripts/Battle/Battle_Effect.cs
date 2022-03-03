@@ -17,6 +17,11 @@ public class Battle_Effect : BattleCommand
         this.effect_PoolManager = effect_PoolManager;
     }
 
+    /// <summary>
+    /// 이펙트 사용
+    /// </summary>
+    /// <param name="effectType">무슨 이펙트를 사용할지</param>
+    /// <param name="position">이펙트의 위치</param>
     public void Set_Effect(EffectType effectType, Vector2 position)
     {
         Transform effect_Parent = effect_PoolManager.GetChild((int)effectType);

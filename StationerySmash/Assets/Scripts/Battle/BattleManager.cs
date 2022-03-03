@@ -117,9 +117,11 @@ public class BattleManager : MonoBehaviour
 
     private void Update()
     {
+        //카메라 위치, 크기 조정
         battle_Camera.Update_CameraPos();
         battle_Camera.Update_CameraScale();
 
+        //카드 시스템
         if (Input.GetKeyDown(KeyCode.X))
         {
             battle_Card.Add_OneCard();
@@ -137,6 +139,7 @@ public class BattleManager : MonoBehaviour
             battle_Card.Subtract_Card();
         }
 
+        //던지기 시스템
         if(Input.GetMouseButtonDown(0))
         {
             battle_Throw.Pull_Unit(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -152,22 +155,37 @@ public class BattleManager : MonoBehaviour
     }
 
     #region 공용함수
-    public GameObject Create_Object(GameObject gameobj, Vector3 position, Quaternion quaternion)
+
+    /// <summary>
+    /// 오브젝트 생성
+    /// </summary>
+    /// <param name="prefeb">생성할 프리펩</param>
+    /// <param name="position">생성할 위치</param>
+    /// <param name="quaternion">생성할 때의 각도</param>
+    /// <returns></returns>
+    public GameObject Create_Object(GameObject prefeb, Vector3 position, Quaternion quaternion)
     {
-        return Instantiate(gameobj, position, quaternion);
+        return Instantiate(prefeb, position, quaternion);
     }
 
     #endregion
 
     #region 유닛 시스템 함수 Battle_Unit
 
+    /// <summary>
+    /// 버튼함수. 유닛을 소환할 때의 팀
+    /// </summary>
     public void Change_Team()
     {
         battle_Unit.isMyTeam = !battle_Unit.isMyTeam;
         unit_teamText.text = battle_Unit.isMyTeam ? "나의 팀" : "상대 팀";
     }
 
-    public void Pool_Unit(Unit unit)
+    /// <summary>
+    /// 유닛 제거
+    /// </summary>
+    /// <param name="unit">제거할 유닛</param>
+    public void Pool_DeleteUnit(Unit unit)
     {
         unit.gameObject.SetActive(false);
         unit.transform.SetParent(unit_PoolManager);

@@ -323,7 +323,7 @@ public class Pencil_Throw_State : Pencil_State
         float width = ((force * force) * (Mathf.Sin(dirx * 2))) / Mathf.Abs(Physics2D.gravity.y);
         //수평 도달 시간
         float time = force * Mathf.Sin(dir) / Mathf.Abs(Physics2D.gravity.y);
-        time *= 2;
+        time *= 3;
 
 
 
@@ -331,7 +331,7 @@ public class Pencil_Throw_State : Pencil_State
         {
             nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
-        }).SetEase(myUnit.ease);
+        }).SetEase(myUnit.curve);
         
         base.Enter();
     }

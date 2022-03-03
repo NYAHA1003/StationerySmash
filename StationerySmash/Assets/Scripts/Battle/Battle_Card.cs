@@ -173,6 +173,11 @@ public class Battle_Card : BattleCommand
         isFusion = false;
     }
 
+    /// <summary>
+    /// 카드 융합 애니메이션
+    /// </summary>
+    /// <param name="index">몇 번째 카드가 융합하는지</param>
+    /// <returns></returns>
     private IEnumerator Fusion_Move(int index)
     {
         battleManager.card_DatasTemp[index + 1].Set_CardPRS(battleManager.card_DatasTemp[index].originPRS, 0.3f);

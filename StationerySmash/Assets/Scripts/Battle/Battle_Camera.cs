@@ -22,11 +22,18 @@ public class Battle_Camera : BattleCommand
         this.camera = camera;
     }
 
-    public void Set_CameraMove(bool isboolean)
+    /// <summary>
+    /// 카메라가 움직일 수 있는 상태인지
+    /// </summary>
+    /// <param name="isCameraMove">True면 움직일 수 있음</param>
+    public void Set_CameraIsMove(bool isCameraMove)
     {
-        isCameraMove = isboolean;
+        this.isCameraMove = isCameraMove;
     }
 
+    /// <summary>
+    /// 카메라 크기 조정
+    /// </summary>
     public void Update_CameraScale()
     {
         if (Input.GetKey(KeyCode.UpArrow))
@@ -84,6 +91,9 @@ public class Battle_Camera : BattleCommand
         }
     }
 
+    /// <summary>
+    /// 카메라 위치 조정
+    /// </summary>
     public void Update_CameraPos()
     {
         //if(Input.touchCount != 1)

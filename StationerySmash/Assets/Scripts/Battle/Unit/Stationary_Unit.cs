@@ -15,7 +15,9 @@ public class Stationary_Unit : Unit
     protected Image delayBar;
     public float attack_Cur_Delay { get; private set; }
 
-    public Ease ease;
+    //public Ease ease;
+    public AnimationCurve curve;
+
     private Camera mainCam;
 
     private void Awake()
@@ -43,7 +45,7 @@ public class Stationary_Unit : Unit
     }
     public void Delete_Unit()
     {
-        battleManager.Pool_Unit(this);
+        battleManager.Pool_DeleteUnit(this);
 
         if(isMyTeam)
         {
@@ -60,7 +62,7 @@ public class Stationary_Unit : Unit
 
     public override void Pull_Unit()
     {
-        battleManager.battle_Camera.Set_CameraMove(false);
+        battleManager.battle_Camera.Set_CameraIsMove(false);
         unitState = new Pencil_Pull_State(transform, spr.transform, this);
     }
 
