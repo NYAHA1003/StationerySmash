@@ -262,7 +262,7 @@ public class Pencil_Damaged_State : Pencil_State
         
         myTrm.DOKill();
         myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), height, 1, time);
-        Debug.Log("최고점: " + height + " 시간: " + time  + " 넉백: " + (kbData.baseKnockback + kbData.extraKnockback));
+        //Debug.Log("최고점: " + height + " 시간: " + time  + " 넉백: " + (kbData.baseKnockback + kbData.extraKnockback));
     }
 
     public override void Update()
@@ -273,6 +273,7 @@ public class Pencil_Damaged_State : Pencil_State
                 nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
                 break;
             case AttackType.Stun:
+                nextState = new Pencil_Stun_State(myTrm, mySprTrm, myUnit, 0.5f);
                 break;
         }
         
@@ -429,7 +430,8 @@ public class Pencil_Stun_State : Pencil_State
 
     public override void Enter()
     {
-        //myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Stun, myTrm.position, stunTime, true);
+        stunTime = stunTime + (stunTime * (((float)myUnit.maxhp / (myUnit.hp + 0.1f)) - 1));
+        Debug.Log(stunTime);
         base.Enter();
     }
 
