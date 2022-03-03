@@ -15,6 +15,8 @@ public class Unit : MonoBehaviour
     public int hp { get; protected set; } = 100;
     public int weight { get; protected set; }
     public int maxhp { get; protected set; }
+    public bool isInvincibility { get; private set; }
+
     public bool isMyTeam;
 
     public BattleManager battleManager { get; protected set; }
@@ -42,7 +44,7 @@ public class Unit : MonoBehaviour
     }
 
 
-    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir)
+    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback)
     {
     }
     public void Subtract_HP(int damage)
@@ -56,5 +58,10 @@ public class Unit : MonoBehaviour
     public virtual void Throw_Unit()
     {
 
+    }
+
+    public void Set_IsInvincibility(bool isboolean)
+    {
+        isInvincibility = isboolean;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Utill;
 
 public class Stationary_Unit : Unit
 {
@@ -19,6 +20,7 @@ public class Stationary_Unit : Unit
     public AnimationCurve curve;
 
     private Camera mainCam;
+
 
     private void Awake()
     {
@@ -59,9 +61,9 @@ public class Stationary_Unit : Unit
         battleManager.unit_EnemyDatasTemp.Remove(this);
     }
 
-    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir)
+    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback)
     {
-        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, knockback, dir);
+        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, new KBData(knockback, extraKnockback, dir));
     }
 
     public override void Pull_Unit()

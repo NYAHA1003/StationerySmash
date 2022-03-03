@@ -46,7 +46,7 @@ public class PencilCase_Unit : Unit
         isSettingEnd = true;
     }
 
-    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir)
+    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback)
     {
         unitState = new PencilCase_Normal_Damaged_State(transform, spr.transform, this, damage);
     }

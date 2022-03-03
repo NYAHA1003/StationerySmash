@@ -124,6 +124,10 @@ public class Pencil_Move_State : Pencil_State
                 {
                     continue;
                 }
+                if(list[i].isInvincibility)
+                {
+                    continue;
+                }
 
                 targetUnit = list[i];
                 targetRange = Vector2.Distance(myTrm.position, targetUnit.transform.position);
@@ -164,7 +168,7 @@ public class Pencil_Attack_State : Pencil_State
         Check_Range();
 
         //쿨타임 감소
-        if(max_delay >= cur_delay)
+        if(max_delay >= cur_delay || targetUnit.isInvincibility)
         {
             cur_delay += myUnitData.attackSpeed * Time.deltaTime;
             Set_Delay();
@@ -179,7 +183,7 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
+        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir, 0);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
@@ -228,45 +232,51 @@ public class Pencil_Attack_State : Pencil_State
 
 public class Pencil_Damaged_State : Pencil_State
 {
-    private float knockback;
-    private float dir;
+    private KBData kbData;
     private int damaged;
 
     private Unit attacker;
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, float knockback, float dir) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, KBData kbData) : base(myTrm, mySprTrm, myUnit)
     {
         curState = eState.DAMAGED;
+        this.kbData = kbData;
         this.damaged = damaged;
-        this.knockback = knockback;
-        this.dir = dir;
         this.attacker = attacker;
     }
 
     public override void Enter()
     {
-        //데미지 입음
+        myUnit.Set_IsInvincibility(true);
         myUnit.Subtract_HP(damaged);
         KnockBack();
-        Debug.Log(myUnit.name + "의 체력 : " + myUnit.hp);
         base.Enter();
     }
 
     private void KnockBack()
     {
-        float calculated_knockback = (knockback / (myUnitData.weight * (((float)myUnit.hp / myUnit.maxhp) + 0.1f))) * (myUnit.isMyTeam ? 1 : -1);
-        float height = Utill_Parabola.Caculated_Height(knockback * 0.15f, dir * Mathf.Deg2Rad);
-        float time = Utill_Parabola.Caculated_Time(knockback * 0.15f, dir * Mathf.Deg2Rad, 1);
+        float calculated_knockback = kbData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.isMyTeam);
+        float height = Utill_Parabola.Caculated_Height((kbData.baseKnockback + kbData.extraKnockback) * 0.15f, kbData.direction, 1, 0.1f);
+        float time = Mathf.Abs((kbData.baseKnockback * 0.5f + kbData.extraKnockback)  / (Physics2D.gravity.y ));
+        
+        myTrm.DOKill();
         myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), height, 1, time);
+        Debug.Log("최고점: " + height + " 시간: " + time  + " 넉백: " + (kbData.baseKnockback + kbData.extraKnockback));
     }
 
     public override void Update()
     {
-        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.2f);
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
         if (myUnit.hp <= 0 )
         {
             nextState = new Pencil_Die_State(myTrm, mySprTrm, myUnit);
         }
         curEvent = eEvent.EXIT;
+    }
+
+    public override void Exit()
+    {
+        myUnit.Set_IsInvincibility(false);
+        base.Exit();
     }
 }
 
@@ -361,7 +371,6 @@ public class Pencil_Throw_State : Pencil_State
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < 0.2f)
             {
                 Check_WeightDamage(targetUnit);
-                targetUnit.Run_Damaged(myUnit, 10, 1, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
             }
         }
     }
@@ -386,6 +395,12 @@ public class Pencil_Throw_State : Pencil_State
         //무게가 같을 경우
         if (myUnit.weight == targetUnit.weight)
         {
+            float dir = Vector2.Angle((Vector2)myTrm.position, (Vector2)targetUnit.transform.position);
+            float extraKnockBack = (targetUnit.weight - myUnitData.weight * (float)targetUnit.hp / targetUnit.maxhp) * 0.025f;
+
+            targetUnit.Run_Damaged(myUnit, 10, 10, 180 - dir, extraKnockBack);
+            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, new KBData(10, extraKnockBack, dir));
+            curEvent = eEvent.EXIT;
 
             return;
         }
