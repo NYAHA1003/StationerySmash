@@ -15,6 +15,7 @@ public class Stationary_Unit : Unit
     protected Image delayBar;
     public float attack_Cur_Delay { get; private set; }
 
+    public Ease ease;
     private Camera mainCam;
 
     private void Awake()

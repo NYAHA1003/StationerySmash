@@ -50,12 +50,21 @@ public class Battle_Throw : BattleCommand
             float dir = Mathf.Atan2(direction.y, direction.x);
             float dirx = Mathf.Atan2(direction.y, -direction.x);
 
+            if(dir < 0)
+            {
+                for (int i = 0; i < parabola.positionCount; i++)
+                {
+                    parabola.SetPosition(i, Vector3.zero);
+                }
+                return;
+            }
+
             //화살표
             arrow.transform.position = throw_Unit.transform.position;
             arrow.transform.eulerAngles = new Vector3(0, 0, dir * Mathf.Rad2Deg);
             
             //초기 벡터
-            force = Mathf.Clamp(Vector2.Distance(throw_Unit.transform.position, pos), 0, 2) * 4;
+            force = Mathf.Clamp(Vector2.Distance(throw_Unit.transform.position, pos), 0, 1) * 4;
             
             //최고점
             float height = (force * force) * (Mathf.Sin(dirx) * Mathf.Sin(dirx)) / Mathf.Abs((Physics2D.gravity.y * 2));

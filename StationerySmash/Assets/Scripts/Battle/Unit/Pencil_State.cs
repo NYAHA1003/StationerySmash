@@ -105,7 +105,7 @@ public class Pencil_Move_State : Pencil_State
         Unit targetUnit = null;
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i].transform.position.sqrMagnitude < targetRange)
+            if (Vector2.Distance(myTrm.position, list[i].transform.position) < targetRange)
             {
                 if (myUnit.isMyTeam && myTrm.position.x > list[i].transform.position.x)
                 {
@@ -121,7 +121,7 @@ public class Pencil_Move_State : Pencil_State
                 }
 
                 targetUnit = list[i];
-                targetRange = targetUnit.transform.position.sqrMagnitude;
+                targetRange = Vector2.Distance(myTrm.position, targetUnit.transform.position);
             }
         }
         
@@ -174,6 +174,7 @@ public class Pencil_Attack_State : Pencil_State
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
         targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback);
+        targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
     }
@@ -245,7 +246,6 @@ public class Pencil_Damaged_State : Pencil_State
     private void KnockBack()
     {
         float calculated_knockback = (knockback / (myUnitData.weight * (((float)myUnit.hp / myUnit.maxhp) + 0.1f))) * (myUnit.isMyTeam ? 1 : -1);
-        Debug.Log(calculated_knockback);
         myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), 0.3f, 1, 0.2f);
     }
 
@@ -304,8 +304,16 @@ public class Pencil_Throw_State : Pencil_State
         float dir = Mathf.Atan2(direction.y, direction.x);
         float dirx = Mathf.Atan2(direction.y, -direction.x);
 
+        if(dir < 0)
+        {
+            nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
+            curEvent = eEvent.EXIT;
+            return;
+        }
+
+
         //ÃÊ±â º¤ÅÍ
-        float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 2) * 4;
+        float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 1) * 4;
 
 
 
@@ -323,7 +331,7 @@ public class Pencil_Throw_State : Pencil_State
         {
             nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
-        });
+        }).SetEase(myUnit.ease);
         
         base.Enter();
     }
