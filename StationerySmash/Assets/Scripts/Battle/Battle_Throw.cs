@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Utill;
 public class Battle_Throw : BattleCommand
 {
     private Unit throw_Unit;
@@ -65,15 +65,14 @@ public class Battle_Throw : BattleCommand
             
             //초기 벡터
             force = Mathf.Clamp(Vector2.Distance(throw_Unit.transform.position, pos), 0, 1) * 4;
-            
-            //최고점
-            float height = (force * force) * (Mathf.Sin(dirx) * Mathf.Sin(dirx)) / Mathf.Abs((Physics2D.gravity.y * 2));
-            //수평 도달 거리
-            float width = ((force * force) * (Mathf.Sin(dirx * 2) )) / Mathf.Abs(Physics2D.gravity.y);
-            //수평 도달 시간
-            float time = force * Mathf.Sin(dir) / Mathf.Abs(Physics2D.gravity.y);
-            time *= 2;
 
+            //최고점
+            float height = Utill_Parabola.Caculated_Height(force, dirx);
+            //수평 도달 거리
+            float width = Utill_Parabola.Caculated_Width(force, dirx);
+            //수평 도달 시간
+            float time = Utill_Parabola.Caculated_Time(force, dir, 2);
+            
             List<Vector2> linePos = Set_ParabolaPos(parabola.positionCount, width, force, dir, time);
 
             for (int i = 0; i < parabola.positionCount; i++)
@@ -99,7 +98,7 @@ public class Battle_Throw : BattleCommand
         for(int i = 0; i < count; i ++)
         {
             Vector3 pos = Vector3.Lerp((Vector2)throw_Unit.transform.position, new Vector2(throw_Unit.transform.position.x - width, 0), objLerps[i]);
-            pos.y = (force * timeLerps[i] * Mathf.Sin(dir_rad)) - (Mathf.Abs(Physics2D.gravity.y / 2)  * (timeLerps[i] * timeLerps[i]));
+            pos.y = Utill_Parabola.Caculated_TimeToPos(force, dir_rad, timeLerps[i]);
 
             results.Add(pos);
         }

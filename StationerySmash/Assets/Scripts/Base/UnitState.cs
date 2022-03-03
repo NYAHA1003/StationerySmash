@@ -7,7 +7,7 @@ public class UnitState
 {
     public enum eState  // 가질 수 있는 상태 나열
     {
-        IDLE, MOVE, ATTACK, WAIT, DAMAGED, DIE
+        IDLE, MOVE, ATTACK, WAIT, DAMAGED, DIE, PULL, THROW, STUN, 
     };
 
     public enum eEvent  // 이벤트 나열

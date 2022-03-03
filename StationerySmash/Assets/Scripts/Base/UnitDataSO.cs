@@ -15,7 +15,6 @@ public class UnitDataSO : ScriptableObject
 public class UnitData : DataBase
 {
     public int cost;
-    public int weight;
     public int knockback;
     public float moveSpeed;
     public float attackSpeed;

@@ -9,4 +9,5 @@ public class DataBase
     public string unitName;
     public int hp;
     public Sprite sprite;
+    public int weight;
 }

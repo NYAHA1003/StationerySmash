@@ -4885,3 +4885,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSys: {fileID: 430091320808335755}
+  delete_time: 0.5
+  default_LifeTime: 0.2

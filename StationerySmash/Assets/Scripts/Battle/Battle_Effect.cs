@@ -5,6 +5,7 @@ using UnityEngine;
 public enum EffectType
 {
     Attack,
+    Stun,
 }
 
 public class Battle_Effect : BattleCommand
@@ -17,12 +18,15 @@ public class Battle_Effect : BattleCommand
         this.effect_PoolManager = effect_PoolManager;
     }
 
+    
     /// <summary>
-    /// 이펙트 사용
+    /// 이펙트 설정
     /// </summary>
-    /// <param name="effectType">무슨 이펙트를 사용할지</param>
-    /// <param name="position">이펙트의 위치</param>
-    public void Set_Effect(EffectType effectType, Vector2 position)
+    /// <param name="effectType">이펙트 타입</param>
+    /// <param name="position">이펙트 위치</param>
+    /// <param name="startLifeTime">이펙트의 유지시간</param>
+    /// <param name="isSetLifeTime">이펙트 설정을 할 것인지</param>
+    public void Set_Effect(EffectType effectType, Vector2 position, float startLifeTime = 0f, bool isSetLifeTime = false)
     {
         Transform effect_Parent = effect_PoolManager.GetChild((int)effectType);
         EffectObject effect_Object = null;
@@ -31,7 +35,7 @@ public class Battle_Effect : BattleCommand
             effect_Object = effect_Parent.GetChild(i).GetComponent<EffectObject>();
             if (!effect_Object.gameObject.activeSelf)
             {
-                effect_Object.Set_Effect(position);
+                effect_Object.Set_Effect(position, startLifeTime, isSetLifeTime);
                 return;
             }
         }

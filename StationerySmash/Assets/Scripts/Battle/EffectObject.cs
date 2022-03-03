@@ -8,13 +8,26 @@ public class EffectObject : MonoBehaviour
     private ParticleSystem particleSys;
     [SerializeField]
     private float delete_time = 0.5f;
+    [SerializeField]
+    private float default_LifeTime;
 
-    public void Set_Effect(Vector2 pos)
+    /// <summary>
+    /// 이펙트 리셋 및 설정
+    /// </summary>
+    /// <param name="pos">이펙트 위치</param>
+    /// <param name="startLifeTime">이펙트 유지시간</param>
+    /// <param name="isSetLifeTime">이펙트를 유지시간을 바꿀 것인지</param>
+    public void Set_Effect(Vector2 pos, float startLifeTime = 0f, bool isSetLifeTime = false)
     {
         CancelInvoke();
 
-        //이펙트 리셋
+
         gameObject.SetActive(true);
+        
+        //재생 시간 설정
+        var main = particleSys.main;
+        main.startLifetime = isSetLifeTime ? startLifeTime : default_LifeTime;
+        
         particleSys.Stop();
         particleSys.Play();
 

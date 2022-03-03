@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Utill;
 
 public class Pencil_State : Stationary_UnitState
 {
@@ -30,6 +31,7 @@ public class Pencil_Idle_State : Pencil_State
 {
     public Pencil_Idle_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.IDLE;
     }
 
     public override void Enter()
@@ -48,11 +50,13 @@ public class Pencil_Idle_State : Pencil_State
         base.Exit();
     }
 }
+
 public class Pencil_Wait_State : Pencil_State
 {
     private float waitTime;
     public Pencil_Wait_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, float waitTime) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.WAIT;
         this.waitTime = waitTime;
     }
 
@@ -72,6 +76,7 @@ public class Pencil_Move_State : Pencil_State
 {
     public Pencil_Move_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.MOVE;
     }
 
     public override void Update()
@@ -144,6 +149,7 @@ public class Pencil_Attack_State : Pencil_State
     private float max_delay = 100;
     public Pencil_Attack_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit targetUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.ATTACK;
         this.targetUnit = targetUnit;
     }
 
@@ -220,8 +226,6 @@ public class Pencil_Attack_State : Pencil_State
     }
 }
 
-
-
 public class Pencil_Damaged_State : Pencil_State
 {
     private float knockback;
@@ -229,6 +233,7 @@ public class Pencil_Damaged_State : Pencil_State
     private Unit attacker;
     public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, float knockback) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.DAMAGED;
         this.damaged = damaged;
         this.knockback = knockback;
         this.attacker = attacker;
@@ -264,6 +269,7 @@ public class Pencil_Die_State : Pencil_State
 {
     public Pencil_Die_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.DIE;
     }
 
     public override void Enter()
@@ -280,6 +286,7 @@ public class Pencil_Pull_State : Pencil_State
 {
     public Pencil_Pull_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.PULL;
     }
 
     public override void Enter()
@@ -292,6 +299,7 @@ public class Pencil_Throw_State : Pencil_State
 {
     public Pencil_Throw_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
     {
+        curState = eState.THROW;
     }
 
     public override void Enter()
@@ -311,27 +319,21 @@ public class Pencil_Throw_State : Pencil_State
             return;
         }
 
-
         //초기 벡터
         float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 1) * 4;
 
-
-
         //최고점
-        float height = (force * force) * (Mathf.Sin(dirx) * Mathf.Sin(dirx)) / Mathf.Abs((Physics2D.gravity.y * 2));
+        float height = Utill_Parabola.Caculated_Height(force, dirx);
         //수평 도달 거리
-        float width = ((force * force) * (Mathf.Sin(dirx * 2))) / Mathf.Abs(Physics2D.gravity.y);
+        float width = Utill_Parabola.Caculated_Width(force, dirx);
         //수평 도달 시간
-        float time = force * Mathf.Sin(dir) / Mathf.Abs(Physics2D.gravity.y);
-        time *= 3;
-
-
+        float time = Utill_Parabola.Caculated_Time(force, dir, 3);
 
         myTrm.DOJump(new Vector3(myTrm.position.x - width, 0, myTrm.position.z), height, 1, time).OnComplete(() =>
         {
             nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
             curEvent = eEvent.EXIT;
-        }).SetEase(myUnit.curve);
+        }).SetEase(Ease.Linear);
         
         base.Enter();
     }
@@ -353,8 +355,61 @@ public class Pencil_Throw_State : Pencil_State
             targetUnit = list[i];
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < 0.2f)
             {
+                Check_WeightDamage(targetUnit);
                 targetUnit.Run_Damaged(myUnit, 10, 1);
             }
         }
+    }
+
+    private void Check_WeightDamage(Unit targetUnit)
+    {
+
+        //무게가 더 클 경우
+        if (myUnit.weight > targetUnit.weight)
+        {
+
+            return;
+        }
+
+        //무게가 더 작을 경우
+        if (myUnit.weight < targetUnit.weight)
+        {
+
+            return;
+        }
+
+        //무게가 같을 경우
+        if (myUnit.weight == targetUnit.weight)
+        {
+
+            return;
+        }
+    }
+}
+
+public class Pencil_Stun_State : Pencil_State
+{
+    private float stunTime;
+    public Pencil_Stun_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, float stunTime) : base(myTrm, mySprTrm, myUnit)
+    {
+        curState = eState.STUN;
+        this.stunTime = stunTime;
+    }
+
+    public override void Enter()
+    {
+        //myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Stun, myTrm.position, stunTime, true);
+        base.Enter();
+    }
+
+    public override void Update()
+    {
+        if (stunTime > 0)
+        {
+            stunTime -= Time.deltaTime;
+            return;
+        }
+        nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
+        curEvent = eEvent.EXIT;
     }
 }

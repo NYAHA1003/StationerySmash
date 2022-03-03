@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour
 
     protected bool isSettingEnd;
     public int hp { get; protected set; } = 100;
+    public int weight { get; protected set; }
     public int maxhp { get; protected set; }
     public bool isMyTeam;
 
@@ -35,7 +36,7 @@ public class Unit : MonoBehaviour
         this.battleManager = battleManager;
         maxhp = unitData.hp;
         hp = unitData.hp;
-        
+        weight = unitData.weight;
 
         isSettingEnd = true;
     }
@@ -44,7 +45,6 @@ public class Unit : MonoBehaviour
     public virtual void Run_Damaged(Unit attacker, int damage, float knockback)
     {
     }
-
     public void Subtract_HP(int damage)
     {
         hp -= damage;
