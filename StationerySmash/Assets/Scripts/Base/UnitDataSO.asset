@@ -28,21 +28,21 @@ MonoBehaviour:
     unitName: "\uC9C0\uC6B0\uAC1C"
     hp: 100
     sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-    weight: 75
+    weight: 80
     cost: 2
     knockback: 20
     dir: 45
-    moveSpeed: 0.5
+    moveSpeed: 0.1
     attackSpeed: 60
     range: 0.3
   - cord: 2
     unitName: "\uC0E4\uD504"
     hp: 100
     sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-    weight: 75
+    weight: 50
     cost: 3
     knockback: 20
     dir: 70
-    moveSpeed: 1
+    moveSpeed: 0.1
     attackSpeed: 60
     range: 1

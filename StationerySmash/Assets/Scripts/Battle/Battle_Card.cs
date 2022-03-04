@@ -21,7 +21,8 @@ public class Battle_Card : BattleCommand
     public bool isFusion { get; private set; } //카드가 융합중인 상태인지
     public bool isCardDown { get; private set; } //카드를 클릭한 상태인지
 
-    private int idCount;
+    private int cardidCount;
+    private int unitidCount;
 
     public Battle_Card(BattleManager battleManager, UnitDataSO unitDataSO, GameObject card_Prefeb, Transform card_PoolManager, Transform card_Canvas, RectTransform card_SpawnPosition, RectTransform card_LeftPosition, RectTransform card_RightPosition)
         : base(battleManager)
@@ -55,7 +56,7 @@ public class Battle_Card : BattleCommand
         cur_Card++;
 
         CardMove cardmove = Pool_Card();
-        cardmove.Set_UnitData(unitDataSO.unitDatas[random], idCount++);
+        cardmove.Set_UnitData(unitDataSO.unitDatas[random], cardidCount++);
         battleManager.card_DatasTemp.Add(cardmove);
 
         Sort_Card();
@@ -289,6 +290,6 @@ public class Battle_Card : BattleCommand
         //유닛 소환
 
         Vector3 mouse_Pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        battleManager.battle_Unit.Summon_Unit(card.unitData, new Vector3(mouse_Pos.x,0,0));
+        battleManager.battle_Unit.Summon_Unit(card.unitData, new Vector3(mouse_Pos.x,0,0), unitidCount);
     }
 }

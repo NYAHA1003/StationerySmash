@@ -10,6 +10,7 @@ public class Battle_Unit : BattleCommand
     private GameObject unit_AfterImage;
     private SpriteRenderer unit_AfterImage_Spr;
     public bool isMyTeam = true;
+    private int count;
 
     public Battle_Unit(BattleManager battleManager, GameObject unit_Prefeb, Transform unit_PoolManager, Transform unit_Parent, GameObject unit_AfterImage) : base(battleManager)
     {
@@ -20,10 +21,10 @@ public class Battle_Unit : BattleCommand
         unit_AfterImage_Spr = unit_AfterImage.GetComponent<SpriteRenderer>();
     }
 
-    public void Summon_Unit(UnitData unitData, Vector3 Pos)
+    public void Summon_Unit(UnitData unitData, Vector3 Pos, int count)
     {
         Stationary_Unit unit = Pool_Unit(Pos);
-        unit.Set_Stationary_UnitData(unitData, isMyTeam, battleManager);
+        unit.Set_Stationary_UnitData(unitData, isMyTeam, battleManager, count);
 
         if(isMyTeam)
         {

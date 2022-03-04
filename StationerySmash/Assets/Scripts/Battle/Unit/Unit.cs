@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Utill;
 
 public enum AttackType
 {
@@ -19,6 +19,11 @@ public class Unit : MonoBehaviour
 
 
     protected bool isSettingEnd;
+
+    public int myDamageId = 0;
+    public int damagedId = 0;
+    public int damageCount = 0;
+    private int id;
     public int hp { get; protected set; } = 100;
     public int weight { get; protected set; }
     public int maxhp { get; protected set; }
@@ -36,7 +41,7 @@ public class Unit : MonoBehaviour
         unitState = unitState.Process();
     }
 
-    public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager)
+    public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager, int id)
     {
         transform.name = unitData.cord + unitData.unitName + (isMyTeam ? "¾Æ±º":"Àû");
         this.isMyTeam = isMyTeam;
@@ -46,12 +51,13 @@ public class Unit : MonoBehaviour
         maxhp = unitData.hp;
         hp = unitData.hp;
         weight = unitData.weight;
+        id = id;
 
         isSettingEnd = true;
     }
 
 
-    public virtual void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback, AttackType attackType)
+    public virtual void Run_Damaged(Unit attacker, int damageId ,int damage, KBData kBData, AttackType attackType)
     {
     }
     public void Subtract_HP(int damage)
@@ -70,5 +76,16 @@ public class Unit : MonoBehaviour
     public void Set_IsInvincibility(bool isboolean)
     {
         isInvincibility = isboolean;
+    }
+
+    public void Set_DamageId()
+    {
+        damageCount++;
+        myDamageId = id * 10000 + damageCount;
+    }
+
+    public int Get_DamageId()
+    {
+        return myDamageId;
     }
 }

@@ -183,7 +183,9 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        targetUnit.Run_Damaged(myUnit, 10, myUnitData.knockback, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir, 0, AttackType.Normal);
+        myUnit.Set_DamageId();
+        KBData kbData = new KBData(myUnitData.knockback, 0, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
+        targetUnit.Run_Damaged(myUnit, myUnit.myDamageId ,10, kbData, AttackType.Normal);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
@@ -248,6 +250,7 @@ public class Pencil_Damaged_State : Pencil_State
 
     public override void Enter()
     {
+        Debug.Log(damaged);
         myUnit.Set_IsInvincibility(true);
         myUnit.Subtract_HP(damaged);
         KnockBack();
@@ -257,11 +260,12 @@ public class Pencil_Damaged_State : Pencil_State
     private void KnockBack()
     {
         float calculated_knockback = kbData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.isMyTeam);
-        float height = Utill_Parabola.Caculated_Height((kbData.baseKnockback + kbData.extraKnockback) * 0.15f, kbData.direction, 1, 0.1f);
-        float time = Mathf.Abs((kbData.baseKnockback * 0.5f + kbData.extraKnockback)  / (Physics2D.gravity.y ));
+        float height = kbData.baseKnockback * 0.01f + Utill_Parabola.Caculated_Height((kbData.baseKnockback + kbData.extraKnockback) * 0.15f, kbData.direction, 1);
+        float time = kbData.baseKnockback * 0.005f +  Mathf.Abs((kbData.baseKnockback * 0.5f + kbData.extraKnockback)  / (Physics2D.gravity.y ));
         
         myTrm.DOKill();
         myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), height, 1, time);
+        
         //Debug.Log("최고점: " + height + " 시간: " + time  + " 넉백: " + (kbData.baseKnockback + kbData.extraKnockback));
     }
 
@@ -389,29 +393,36 @@ public class Pencil_Throw_State : Pencil_State
 
     private void Check_WeightDamage(Unit targetUnit)
     {
+        float dir = Vector2.Angle((Vector2)myTrm.position, (Vector2)targetUnit.transform.position);
+        float extraKnockBack = (targetUnit.weight - myUnitData.weight * (float)targetUnit.hp / targetUnit.maxhp) * 0.025f;
+        myUnit.Set_DamageId();
 
         //무게가 더 클 경우
         if (myUnit.weight > targetUnit.weight)
         {
-
+            KBData kbData = new KBData(10, extraKnockBack, 180 - dir);
+            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId, 10, kbData, AttackType.Stun);
             return;
         }
 
         //무게가 더 작을 경우
         if (myUnit.weight < targetUnit.weight)
         {
+            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId, 10, KBData.Return_Zero(), AttackType.Normal);
 
+            KBData kbData = new KBData(20, 0, dir);
+            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, kbData, AttackType.Stun);
+            curEvent = eEvent.EXIT;
             return;
         }
 
         //무게가 같을 경우
         if (myUnit.weight == targetUnit.weight)
         {
-            float dir = Vector2.Angle((Vector2)myTrm.position, (Vector2)targetUnit.transform.position);
-            float extraKnockBack = (targetUnit.weight - myUnitData.weight * (float)targetUnit.hp / targetUnit.maxhp) * 0.025f;
-
-            targetUnit.Run_Damaged(myUnit, 10, 10, 180 - dir, extraKnockBack, AttackType.Stun);
-            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, new KBData(10, extraKnockBack, dir), AttackType.Stun);
+            KBData kbData = new KBData(10, extraKnockBack, 180 - dir);
+            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId ,10, kbData, AttackType.Stun);
+            kbData = new KBData(20, 0, dir);
+            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, kbData, AttackType.Stun);
             curEvent = eEvent.EXIT;
 
             return;

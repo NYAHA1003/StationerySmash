@@ -27,7 +27,7 @@ public class Stationary_Unit : Unit
         mainCam = Camera.main;
         canvas.worldCamera = mainCam;
     }
-    public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager)
+    public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager, int id)
     {
         this.unitData = unitData;
         unitState = new Pencil_Idle_State(transform, spr.transform, this);
@@ -37,7 +37,7 @@ public class Stationary_Unit : Unit
         Update_DelayBar(attack_Cur_Delay);
         delayBar.rectTransform.anchoredPosition = isMyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
 
-        Set_UnitData(unitData, isMyTeam, battleManager);
+        Set_UnitData(unitData, isMyTeam, battleManager, id);
     }
 
 
@@ -61,9 +61,14 @@ public class Stationary_Unit : Unit
         battleManager.unit_EnemyDatasTemp.Remove(this);
     }
 
-    public override void Run_Damaged(Unit attacker, int damage, float knockback, float dir, float extraKnockback, AttackType attackType)
+    public override void Run_Damaged(Unit attacker, int damageId ,int damage, KBData kbData, AttackType attackType)
     {
-        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, new KBData(knockback, extraKnockback, dir), attackType);
+        if(damageId == damagedId)
+        {
+            return;
+        }
+        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, kbData, attackType);
+    
     }
 
     public override void Pull_Unit()

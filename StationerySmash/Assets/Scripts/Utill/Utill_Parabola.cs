@@ -19,6 +19,11 @@ namespace Utill
             this.direction = direction * Mathf.Deg2Rad;
         }
 
+        static public KBData Return_Zero()
+        {
+            return new KBData(0,0,0);
+        }
+
         public float Caculated_Knockback(int weight, int hp, int maxhp, bool isMyTeam)
         {
             return ((baseKnockback + extraKnockback) / (weight * (((float)hp / maxhp) + 0.1f))) * (isMyTeam ? 1 : -1);
@@ -35,13 +40,9 @@ namespace Utill
         /// <param name="sin">사인 함수의 라디안값</param>
         /// <param name="multiple">배수</param>
         /// <returns></returns>
-        static public float Caculated_Height(float v, float sin, float multiple = 1, float minHeight = 0)
+        static public float Caculated_Height(float v, float sin, float multiple = 1)
         {
             float height = ((v * v) * (Mathf.Sin(sin) * Mathf.Sin(sin)) / Mathf.Abs((Physics2D.gravity.y * 2))) * multiple;
-            if(minHeight > height)
-            {
-                return minHeight;
-            }
             return height;
         }
 
