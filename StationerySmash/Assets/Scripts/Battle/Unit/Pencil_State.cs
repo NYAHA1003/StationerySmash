@@ -263,17 +263,10 @@ public class Pencil_Damaged_State : Pencil_State
 
     public override void Update()
     {
-        switch (atkData.atkType)
+        if(atkData.atkType == AtkType.Normal)
         {
-            case AtkType.Normal:
-                nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
-                break;
-            case AtkType.Stun:
-                nextState = new Pencil_Stun_State(myTrm, mySprTrm, myUnit, 0.5f);
-                break;
+            nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
         }
-        
-        
         if (myUnit.hp <= 0 )
         {
             nextState = new Pencil_Die_State(myTrm, mySprTrm, myUnit);
@@ -431,30 +424,3 @@ public class Pencil_Throw_State : Pencil_State
 
 }
 
-public class Pencil_Stun_State : Pencil_State
-{
-    private float stunTime;
-    public Pencil_Stun_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, float stunTime) : base(myTrm, mySprTrm, myUnit)
-    {
-        curState = eState.STUN;
-        this.stunTime = stunTime;
-    }
-
-    public override void Enter()
-    {
-        stunTime = stunTime + (stunTime * (((float)myUnit.maxhp / (myUnit.hp + 0.1f)) - 1));
-        //Debug.Log(stunTime);
-        base.Enter();
-    }
-
-    public override void Update()
-    {
-        if (stunTime > 0)
-        {
-            stunTime -= Time.deltaTime;
-            return;
-        }
-        nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
-        curEvent = eEvent.EXIT;
-    }
-}

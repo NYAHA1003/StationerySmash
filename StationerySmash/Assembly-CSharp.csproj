@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Base\Command.cs" />
     <Compile Include="Assets\Scripts\Battle\Battle_Effect.cs" />
     <Compile Include="Assets\Scripts\Battle\EffectObject.cs" />
+    <Compile Include="Assets\Scripts\Battle\Battle_AI.cs" />
     <Compile Include="Assets\Scripts\Base\UnitDataSO.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit\PencilCase_Normal_State.cs" />
     <Compile Include="Assets\Scripts\Base\PencilCaseDataSO.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Assets\Scripts\Text\TextSetting.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit\Pencil_State.cs" />
     <Compile Include="Assets\Scripts\Base\StageDataSO.cs" />
-    <Compile Include="Assets\Scripts\Battle\Battle_AI.cs" />
+    <Compile Include="Assets\Scripts\Base\Stationary_Unit_Normal_Eff_State.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

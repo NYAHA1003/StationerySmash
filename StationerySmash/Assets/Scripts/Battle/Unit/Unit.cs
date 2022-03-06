@@ -7,6 +7,7 @@ using Utill;
 public class Unit : MonoBehaviour 
 {
     protected UnitState unitState;
+    protected List<UnitState> statEffList;
 
     [SerializeField]
     protected SpriteRenderer spr;
@@ -32,6 +33,11 @@ public class Unit : MonoBehaviour
         if (!isSettingEnd) return;
 
         unitState = unitState.Process();
+        
+        //for(int i = 0; i < statEffList.Count; i++)
+        //{
+        //    statEffList[i] = statEffList[i].Process();
+        //}
     }
 
     public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager, int id)
@@ -81,5 +87,13 @@ public class Unit : MonoBehaviour
     public void Set_IsInvincibility(bool isboolean)
     {
         isInvincibility = isboolean;
+    }
+    public void Set_UnitState(UnitState unitstate)
+    {
+        unitstate.Set_NextState(unitstate);
+    }
+    public void Add_StatusEffect(UnitState statEffState)
+    {
+        statEffList.Add(statEffState);
     }
 }

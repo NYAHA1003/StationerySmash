@@ -108,6 +108,11 @@ public class BattleManager : MonoBehaviour
 
     #region 스테이지 AI 시스템 Battle_AI
 
+    public Battle_AI battle_AI;
+
+    [Header("AI 시스템")]
+    [Space(30)]
+    public bool ai_isActive;
 
 
     #endregion
@@ -119,6 +124,7 @@ public class BattleManager : MonoBehaviour
         battle_Unit = new Battle_Unit(this, unit_Prefeb, unit_PoolManager, unit_Parent, unit_AfterImage);
         battle_Effect = new Battle_Effect(this, effect_PoolManager);
         battle_Throw = new Battle_Throw(this, throw_parabola, throw_Arrow);
+        battle_AI = new Battle_AI(this);
     }
 
     private void Update()
