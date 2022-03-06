@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Utill;
 
 [CreateAssetMenu(fileName = "UnitDataSO", menuName = "Scriptable Object/UnitDataSO")]
 public class UnitDataSO : ScriptableObject
@@ -20,5 +21,5 @@ public class UnitData : DataBase
     public float moveSpeed;
     public float attackSpeed;
     public float range;
-    //asdf
+    public UnitType unitType;
 }

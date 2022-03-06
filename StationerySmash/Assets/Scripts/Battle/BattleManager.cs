@@ -106,6 +106,12 @@ public class BattleManager : MonoBehaviour
 
     #endregion
 
+    #region 스테이지 AI 시스템 Battle_AI
+
+
+
+    #endregion
+
     private void Awake()
     {
         battle_Card = new Battle_Card(this, unitDataSO, card_cardMove_Prefeb, card_PoolManager, card_Canvas, card_SpawnPosition, card_LeftPosition, card_RightPosition);

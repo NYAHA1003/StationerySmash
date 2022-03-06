@@ -160,7 +160,7 @@ public class Battle_Card : BattleCommand
         if (isDrow) return;
         for (int i = 0; i < battleManager.card_DatasTemp.Count - 1; i++)
         {
-            if (battleManager.card_DatasTemp[i].unitData.cord == battleManager.card_DatasTemp[i + 1].unitData.cord)
+            if (battleManager.card_DatasTemp[i].unitData.unitType == battleManager.card_DatasTemp[i + 1].unitData.unitType)
             {
                 if (battleManager.card_DatasTemp[i].grade == battleManager.card_DatasTemp[i + 1].grade)
                 {

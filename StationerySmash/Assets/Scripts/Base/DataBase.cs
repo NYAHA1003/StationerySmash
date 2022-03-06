@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class DataBase
 {
-    public int cord;
     public string unitName;
     public int hp;
     public Sprite sprite;

@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\Text\TextSetting.cs" />
     <Compile Include="Assets\Scripts\Battle\Unit\Pencil_State.cs" />
     <Compile Include="Assets\Scripts\Base\StageDataSO.cs" />
+    <Compile Include="Assets\Scripts\Battle\Battle_AI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

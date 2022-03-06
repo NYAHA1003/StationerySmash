@@ -4,6 +4,18 @@ using UnityEngine;
 
 namespace Utill
 {
+    public enum UnitType
+    {
+        None,
+        Pencil,
+        Eraser,
+        Sharp,
+    }
+    public enum PencilCaseType
+    {
+        Normal,
+
+    }
     public enum AtkType
     {
         Normal,

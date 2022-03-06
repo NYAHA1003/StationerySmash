@@ -36,7 +36,7 @@ public class PencilCase_Unit : Unit
     public void Set_PencilCaseData(PencilCaseDataSO pencilCaseData, bool isMyTeam, BattleManager battleManager)
     {
         this.pencilCaseData = pencilCaseData;
-        transform.name = pencilCaseData.data.cord + (isMyTeam ? "아군" : "적");
+        transform.name = pencilCaseData.pencilCaseType + (isMyTeam ? "아군" : "적");
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = pencilCaseData.data.sprite;

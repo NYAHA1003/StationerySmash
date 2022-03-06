@@ -36,7 +36,7 @@ public class Unit : MonoBehaviour
 
     public virtual void Set_UnitData(DataBase unitData, bool isMyTeam, BattleManager battleManager, int id)
     {
-        transform.name = unitData.cord + unitData.unitName + (isMyTeam ? "아군":"적");
+        transform.name = unitData.unitName + (isMyTeam ? "아군":"적");
         this.isMyTeam = isMyTeam;
         spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = unitData.sprite;
