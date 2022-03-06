@@ -39,8 +39,9 @@ namespace Utill
 
         //공격 속성
         public AtkType atkType;
+        public float value;
 
-        public AtkData(Unit attacker, int damage, float baseKnockback, float extraKnockback, float direction, bool isMyTeam, AtkType atkType, int damageId = 0)
+        public AtkData(Unit attacker, int damage, float baseKnockback, float extraKnockback, float direction, bool isMyTeam, AtkType atkType, float value = 0, int damageId = 0)
         {
             this.attacker = attacker;
             this.damage = damage;
@@ -49,6 +50,7 @@ namespace Utill
             this.extraKnockback = extraKnockback;
             this.direction = (isMyTeam ? direction : 180 - direction) * Mathf.Deg2Rad;
             this.atkType = atkType;
+            this.value = value;
         }
         public float Caculated_Knockback(int weight, int hp, int maxhp, bool isMyTeam)
         {
@@ -72,6 +74,10 @@ namespace Utill
             this.damage = damage;
         }
 
+        public void Reset_Value(float value)
+        {
+            this.value = value;
+        }
         public void Set_DamageId(int damageId = 0)
         {
             if(damageId != 0)

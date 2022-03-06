@@ -9,6 +9,7 @@ public class Stationary_Unit : Unit
 {
 
     public UnitData unitData;
+    protected List<Stationary_Unit_Eff_State> statEffList = new List<Stationary_Unit_Eff_State>();
 
     [SerializeField]
     protected Canvas canvas;
@@ -27,6 +28,17 @@ public class Stationary_Unit : Unit
         mainCam = Camera.main;
         canvas.worldCamera = mainCam;
     }
+
+    protected override void Update()
+    {
+        base.Update();
+        
+        for (int i = 0; i < statEffList.Count; i++)
+        {
+            statEffList[i] = statEffList[i].Process();
+        }
+    }
+
     public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager, int id)
     {
         this.unitData = unitData;
@@ -62,8 +74,7 @@ public class Stationary_Unit : Unit
             //똑같은 공격 아이디를 지닌 공격은 무시함
             return;
         }
-        unitState.Set_NextState(new Pencil_Damaged_State(transform, spr.transform, this, atkData));
-        unitState.Set_Event(UnitState.eEvent.EXIT);
+        unitState.Set_Damaged(atkData);
     }
 
     public override void Pull_Unit()
@@ -75,5 +86,24 @@ public class Stationary_Unit : Unit
     public override void Throw_Unit()
     {
         unitState = new Pencil_Throw_State(transform, spr.transform, this);
+    }
+    public void Add_StatusEffect(AtkType atkType, float value = 0)
+    {
+        Stationary_Unit_Eff_State statEffState = statEffList.Find(x => x.statusEffect == atkType);
+        if (statEffState != null)
+        {
+            statEffState.Set_EffSetting(value);
+            return;
+        }
+        statEffState = statEffList.Find(x => x.statusEffect == AtkType.Normal);
+        if (statEffState != null)
+        {
+            statEffState.Set_EffType(atkType, value);
+            return;
+        }
+
+        statEffList.Add(new Stationary_Unit_Eff_State(transform, spr.transform, this, atkType, value));
+
+        return;
     }
 }

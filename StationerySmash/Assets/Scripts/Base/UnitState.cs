@@ -8,7 +8,7 @@ public class UnitState
 {
     public enum eState  // 가질 수 있는 상태 나열
     {
-        IDLE, MOVE, ATTACK, WAIT, DAMAGED, DIE, PULL, THROW, STUN, 
+        IDLE, MOVE, ATTACK, WAIT, DAMAGED, DIE, PULL, THROW, NONE,
     };
 
     public enum eEvent  // 이벤트 나열
@@ -60,13 +60,44 @@ public class UnitState
         return this;
     }
 
-    public void Set_NextState(UnitState state)
-    {
-        nextState = state;
-    }
     public void Set_Event(eEvent eEvent)
     {
         curEvent = eEvent;
     }
 
+    public virtual void Set_Idle()
+    {
+        throw new System.Exception("Set_Idle 함수를 오버라이드하지 않음");
+    }
+
+    public virtual void Set_Wait(float waitTime)
+    {
+        throw new System.Exception("Set_Wait 함수를 오버라이드하지 않음");
+    }
+
+    public virtual void Set_Move()
+    {
+        throw new System.Exception("Set_Move 함수를 오버라이드하지 않음");
+    }
+
+    public virtual void Set_Damaged(AtkData atkData)
+    {
+        throw new System.Exception("Set_Damaged 함수를 오버라이드하지 않음");
+    }
+    public virtual void Set_Die()
+    {
+        throw new System.Exception("Set_Die 함수를 오버라이드하지 않음");
+    }
+    public virtual void Set_Attack()
+    {
+        throw new System.Exception("Set_Attack 함수를 오버라이드하지 않음");
+    }
+    public virtual void Set_Pull()
+    {
+        throw new System.Exception("Set_Pull 함수를 오버라이드하지 않음");
+    }
+    public virtual void Set_Throw()
+    {
+        throw new System.Exception("Set_Throw 함수를 오버라이드하지 않음");
+    }
 }

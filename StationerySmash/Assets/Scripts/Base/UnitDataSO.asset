@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: UnitDataSO
   m_EditorClassIdentifier: 
   unitDatas:
-  - cord: 0
-    unitName: "\uC5F0\uD544"
+  - unitName: "\uC5F0\uD544"
     hp: 100
     sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
     weight: 75
@@ -24,8 +23,8 @@ MonoBehaviour:
     moveSpeed: 0.1
     attackSpeed: 60
     range: 1
-  - cord: 1
-    unitName: "\uC9C0\uC6B0\uAC1C"
+    unitType: 1
+  - unitName: "\uC9C0\uC6B0\uAC1C"
     hp: 100
     sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
     weight: 80
@@ -35,8 +34,8 @@ MonoBehaviour:
     moveSpeed: 0.1
     attackSpeed: 60
     range: 0.3
-  - cord: 2
-    unitName: "\uC0E4\uD504"
+    unitType: 2
+  - unitName: "\uC0E4\uD504"
     hp: 100
     sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
     weight: 50
@@ -46,3 +45,4 @@ MonoBehaviour:
     moveSpeed: 0.1
     attackSpeed: 60
     range: 1
+    unitType: 3

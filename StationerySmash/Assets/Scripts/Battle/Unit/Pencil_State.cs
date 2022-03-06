@@ -25,6 +25,18 @@ public class Pencil_State : Stationary_UnitState
     {
         base.Exit();
     }
+
+    public override void Set_Wait(float waitTime)
+    {
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, waitTime);
+        curEvent = eEvent.EXIT;
+    }
+
+    public override void Set_Damaged(AtkData atkData)
+    {
+        nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, atkData);
+        curEvent = eEvent.EXIT;
+    }
 }
 
 public class Pencil_Idle_State : Pencil_State
@@ -202,29 +214,29 @@ public class Pencil_Attack_State : Pencil_State
         {
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) > myUnitData.range)
             {
-                Set_Move();
+                Move();
                 return;
             }
 
             if (myUnit.isMyTeam && myTrm.position.x > targetUnit.transform.position.x)
             {
-                Set_Move();
+                Move();
                 return;
             }
             if (!myUnit.isMyTeam && myTrm.position.x < targetUnit.transform.position.x)
             {
-                Set_Move();
+                Move();
                 return;
             }
             if(targetUnit.transform.position.y > myTrm.position.y)
             {
-                Set_Move();
+                Move();
                 return;
             }
         }
     }
 
-    private void Set_Move()
+    private void Move()
     {
         nextState = new Pencil_Move_State(myTrm, mySprTrm, myUnit);
         curEvent = eEvent.EXIT;
@@ -244,7 +256,6 @@ public class Pencil_Damaged_State : Pencil_State
 
     public override void Enter()
     {
-        Debug.Log(atkData.damage);
         myUnit.Set_IsInvincibility(true);
         myUnit.Subtract_HP(atkData.damage);
         KnockBack();
@@ -263,14 +274,15 @@ public class Pencil_Damaged_State : Pencil_State
 
     public override void Update()
     {
-        if(atkData.atkType == AtkType.Normal)
-        {
-            nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
-        }
-        if (myUnit.hp <= 0 )
+        if (myUnit.hp <= 0)
         {
             nextState = new Pencil_Die_State(myTrm, mySprTrm, myUnit);
         }
+        if (atkData.atkType != AtkType.Normal)
+        {
+            myUnit.Add_StatusEffect(atkData.atkType, atkData.value);
+        }
+        nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
         curEvent = eEvent.EXIT;
     }
 
@@ -387,6 +399,7 @@ public class Pencil_Throw_State : Pencil_State
         {
             atkData.Reset_Kncockback(10, extraKnockBack, dir, false);
             atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Value(1);
             atkData.Reset_Damage(10);
             targetUnit.Run_Damaged(atkData);
             return;
@@ -399,6 +412,7 @@ public class Pencil_Throw_State : Pencil_State
             targetUnit.Run_Damaged(atkData);
             atkData.Reset_Kncockback(20, 0, dir, true);
             atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Value(1);
 
             myUnit.Run_Damaged(atkData);
             return;
@@ -409,12 +423,14 @@ public class Pencil_Throw_State : Pencil_State
         {
             atkData.Reset_Kncockback(10, extraKnockBack, dir, false);
             atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Value(1);
             atkData.Reset_Damage(10);
             targetUnit.Run_Damaged(atkData);
 
 
             atkData.Reset_Kncockback(20, 0, dir, true);
             atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Value(1);
             atkData.Reset_Damage(0);
             myUnit.Run_Damaged(atkData);
 
