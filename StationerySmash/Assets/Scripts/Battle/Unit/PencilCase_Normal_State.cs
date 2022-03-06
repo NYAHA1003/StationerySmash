@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utill;
 
 public class PencilCase_Normal_State : UnitState
 {
@@ -26,15 +27,15 @@ public class PencilCase_Normal_Idle_State : PencilCase_Normal_State
 
 public class PencilCase_Normal_Damaged_State : PencilCase_Normal_State
 {
-    private int damage;
-    public PencilCase_Normal_Damaged_State(Transform myTrm, Transform mySprTrm, Unit myUnit, int damage) : base(myTrm, mySprTrm, myUnit)
+    private AtkData atkData;
+    public PencilCase_Normal_Damaged_State(Transform myTrm, Transform mySprTrm, Unit myUnit, AtkData atkData) : base(myTrm, mySprTrm, myUnit)
     {
-        this.damage = damage;
+        this.atkData = atkData;
     }
 
     public override void Enter()
     {
-        myUnit.Subtract_HP(damage);
+        myUnit.Subtract_HP(atkData.damage);
 
         base.Enter();
     }

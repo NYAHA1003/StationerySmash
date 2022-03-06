@@ -4,12 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utill;
 
-public enum AttackType
-{
-    Normal,
-    Stun,
-}
-
 public class Unit : MonoBehaviour 
 {
     protected UnitState unitState;
@@ -20,10 +14,9 @@ public class Unit : MonoBehaviour
 
     protected bool isSettingEnd;
 
-    public int myDamageId = 0;
-    public int damagedId = 0;
+    public int myDamagedId = 0;
     public int damageCount = 0;
-    private int id;
+    public int myUnitId;
     public int hp { get; protected set; } = 100;
     public int weight { get; protected set; }
     public int maxhp { get; protected set; }
@@ -51,16 +44,28 @@ public class Unit : MonoBehaviour
         maxhp = unitData.hp;
         hp = unitData.hp;
         weight = unitData.weight;
-        id = id;
+        this.myUnitId = id;
 
         isSettingEnd = true;
     }
 
-
-    public virtual void Run_Damaged(Unit attacker, int damageId ,int damage, KBData kBData, AttackType attackType)
+    public virtual void Delete_Unit()
     {
+        battleManager.Pool_DeleteUnit(this);
+
+        if (isMyTeam)
+        {
+            battleManager.unit_MyDatasTemp.Remove(this);
+            return;
+        }
+        battleManager.unit_EnemyDatasTemp.Remove(this);
     }
-    public void Subtract_HP(int damage)
+
+    public virtual void Run_Damaged(AtkData atkData)
+    {
+
+    }
+    public virtual void Subtract_HP(int damage)
     {
         hp -= damage;
     }
@@ -76,16 +81,5 @@ public class Unit : MonoBehaviour
     public void Set_IsInvincibility(bool isboolean)
     {
         isInvincibility = isboolean;
-    }
-
-    public void Set_DamageId()
-    {
-        damageCount++;
-        myDamageId = id * 10000 + damageCount;
-    }
-
-    public int Get_DamageId()
-    {
-        return myDamageId;
     }
 }

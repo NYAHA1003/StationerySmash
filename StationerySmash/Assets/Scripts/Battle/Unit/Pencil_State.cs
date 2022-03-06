@@ -183,9 +183,8 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        myUnit.Set_DamageId();
-        KBData kbData = new KBData(myUnitData.knockback, 0, myUnit.isMyTeam ? myUnitData.dir : 180 - myUnitData.dir);
-        targetUnit.Run_Damaged(myUnit, myUnit.myDamageId ,10, kbData, AttackType.Normal);
+        AtkData atkData = new AtkData(myUnit, 10, myUnitData.knockback, 0, myUnitData.dir, myUnit.isMyTeam, AtkType.Normal);
+        targetUnit.Run_Damaged(atkData);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
         curEvent = eEvent.EXIT;
@@ -234,49 +233,42 @@ public class Pencil_Attack_State : Pencil_State
 
 public class Pencil_Damaged_State : Pencil_State
 {
-    private AttackType attackType;
-    private KBData kbData;
-    private int damaged;
+    private AtkData atkData;
 
     private Unit attacker;
-    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, Unit attacker, int damaged, KBData kbData, AttackType attackType) : base(myTrm, mySprTrm, myUnit)
+    public Pencil_Damaged_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit, AtkData atkData) : base(myTrm, mySprTrm, myUnit)
     {
         curState = eState.DAMAGED;
-        this.kbData = kbData;
-        this.damaged = damaged;
-        this.attacker = attacker;
-        this.attackType = attackType;
+        this.atkData = atkData;
     }
 
     public override void Enter()
     {
-        Debug.Log(damaged);
+        Debug.Log(atkData.damage);
         myUnit.Set_IsInvincibility(true);
-        myUnit.Subtract_HP(damaged);
+        myUnit.Subtract_HP(atkData.damage);
         KnockBack();
         base.Enter();
     }
 
     private void KnockBack()
     {
-        float calculated_knockback = kbData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.isMyTeam);
-        float height = kbData.baseKnockback * 0.01f + Utill_Parabola.Caculated_Height((kbData.baseKnockback + kbData.extraKnockback) * 0.15f, kbData.direction, 1);
-        float time = kbData.baseKnockback * 0.005f +  Mathf.Abs((kbData.baseKnockback * 0.5f + kbData.extraKnockback)  / (Physics2D.gravity.y ));
+        float calculated_knockback = atkData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.isMyTeam);
+        float height = atkData.baseKnockback * 0.01f + Utill.Utill.Caculated_Height((atkData.baseKnockback + atkData.extraKnockback) * 0.15f, atkData.direction, 1);
+        float time = atkData.baseKnockback * 0.005f +  Mathf.Abs((atkData.baseKnockback * 0.5f + atkData.extraKnockback)  / (Physics2D.gravity.y ));
         
         myTrm.DOKill();
         myTrm.DOJump(new Vector3(myTrm.position.x - calculated_knockback, 0, myTrm.position.z), height, 1, time);
-        
-        //Debug.Log("최고점: " + height + " 시간: " + time  + " 넉백: " + (kbData.baseKnockback + kbData.extraKnockback));
     }
 
     public override void Update()
     {
-        switch (attackType)
+        switch (atkData.atkType)
         {
-            case AttackType.Normal:
+            case AtkType.Normal:
                 nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.5f);
                 break;
-            case AttackType.Stun:
+            case AtkType.Stun:
                 nextState = new Pencil_Stun_State(myTrm, mySprTrm, myUnit, 0.5f);
                 break;
         }
@@ -354,11 +346,11 @@ public class Pencil_Throw_State : Pencil_State
         float force = Mathf.Clamp(Vector2.Distance(myTrm.position, mousePos), 0, 1) * 4;
 
         //최고점
-        float height = Utill_Parabola.Caculated_Height(force, dirx);
+        float height = Utill.Utill.Caculated_Height(force, dirx);
         //수평 도달 거리
-        float width = Utill_Parabola.Caculated_Width(force, dirx);
+        float width = Utill.Utill.Caculated_Width(force, dirx);
         //수평 도달 시간
-        float time = Utill_Parabola.Caculated_Time(force, dir, 3);
+        float time = Utill.Utill.Caculated_Time(force, dir, 3);
 
         myTrm.DOJump(new Vector3(myTrm.position.x - width, 0, myTrm.position.z), height, 1, time).OnComplete(() =>
         {
@@ -386,48 +378,57 @@ public class Pencil_Throw_State : Pencil_State
             targetUnit = list[i];
             if (Vector2.Distance(myTrm.position, targetUnit.transform.position) < 0.2f)
             {
-                Check_WeightDamage(targetUnit);
+                Run_ThrowAttack(targetUnit);
             }
         }
     }
 
-    private void Check_WeightDamage(Unit targetUnit)
+    private void Run_ThrowAttack(Unit targetUnit)
     {
         float dir = Vector2.Angle((Vector2)myTrm.position, (Vector2)targetUnit.transform.position);
         float extraKnockBack = (targetUnit.weight - myUnitData.weight * (float)targetUnit.hp / targetUnit.maxhp) * 0.025f;
-        myUnit.Set_DamageId();
+        AtkData atkData = new AtkData(myUnit, 0, 0, 0, 0, true, AtkType.Normal);
 
         //무게가 더 클 경우
         if (myUnit.weight > targetUnit.weight)
         {
-            KBData kbData = new KBData(10, extraKnockBack, 180 - dir);
-            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId, 10, kbData, AttackType.Stun);
+            atkData.Reset_Kncockback(10, extraKnockBack, dir, false);
+            atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Damage(10);
+            targetUnit.Run_Damaged(atkData);
             return;
         }
 
         //무게가 더 작을 경우
         if (myUnit.weight < targetUnit.weight)
         {
-            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId, 10, KBData.Return_Zero(), AttackType.Normal);
+            atkData.Reset_Damage(10);
+            targetUnit.Run_Damaged(atkData);
+            atkData.Reset_Kncockback(20, 0, dir, true);
+            atkData.Reset_Type(AtkType.Stun);
 
-            KBData kbData = new KBData(20, 0, dir);
-            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, kbData, AttackType.Stun);
-            curEvent = eEvent.EXIT;
+            myUnit.Run_Damaged(atkData);
             return;
         }
 
         //무게가 같을 경우
         if (myUnit.weight == targetUnit.weight)
         {
-            KBData kbData = new KBData(10, extraKnockBack, 180 - dir);
-            targetUnit.Run_Damaged(myUnit, myUnit.myDamageId ,10, kbData, AttackType.Stun);
-            kbData = new KBData(20, 0, dir);
-            nextState = new Pencil_Damaged_State(myTrm, mySprTrm, myUnit, myUnit, 0, kbData, AttackType.Stun);
-            curEvent = eEvent.EXIT;
+            atkData.Reset_Kncockback(10, extraKnockBack, dir, false);
+            atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Damage(10);
+            targetUnit.Run_Damaged(atkData);
+
+
+            atkData.Reset_Kncockback(20, 0, dir, true);
+            atkData.Reset_Type(AtkType.Stun);
+            atkData.Reset_Damage(0);
+            myUnit.Run_Damaged(atkData);
 
             return;
         }
     }
+
 }
 
 public class Pencil_Stun_State : Pencil_State
@@ -442,7 +443,7 @@ public class Pencil_Stun_State : Pencil_State
     public override void Enter()
     {
         stunTime = stunTime + (stunTime * (((float)myUnit.maxhp / (myUnit.hp + 0.1f)) - 1));
-        Debug.Log(stunTime);
+        //Debug.Log(stunTime);
         base.Enter();
     }
 

@@ -47,8 +47,8 @@ public class PencilCase_Unit : Unit
         isSettingEnd = true;
     }
 
-    public override void Run_Damaged(Unit attacker, int damageId ,int damage, KBData kbData, AttackType attackType)
+    public override void Run_Damaged(AtkData atkData)
     {
-        unitState = new PencilCase_Normal_Damaged_State(transform, spr.transform, this, damage);
+        unitState = new PencilCase_Normal_Damaged_State(transform, spr.transform, this, atkData);
     }
 }

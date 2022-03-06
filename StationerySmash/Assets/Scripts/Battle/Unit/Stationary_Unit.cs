@@ -49,26 +49,21 @@ public class Stationary_Unit : Unit
     {
         delayBar.fillAmount = delay;
     }
-    public void Delete_Unit()
-    {
-        battleManager.Pool_DeleteUnit(this);
 
-        if(isMyTeam)
+    public override void Run_Damaged(AtkData atkData)
+    {
+        if (atkData.damageId == -1)
         {
-            battleManager.unit_MyDatasTemp.Remove(this);
+            //무조건 무시해야할 공격
             return;
         }
-        battleManager.unit_EnemyDatasTemp.Remove(this);
-    }
-
-    public override void Run_Damaged(Unit attacker, int damageId ,int damage, KBData kbData, AttackType attackType)
-    {
-        if(damageId == damagedId)
+        if (atkData.damageId == myDamagedId)
         {
+            //똑같은 공격 아이디를 지닌 공격은 무시함
             return;
         }
-        unitState = new Pencil_Damaged_State(transform, spr.transform, this, attacker, damage, kbData, attackType);
-    
+        unitState.Set_NextState(new Pencil_Damaged_State(transform, spr.transform, this, atkData));
+        unitState.Set_Event(UnitState.eEvent.EXIT);
     }
 
     public override void Pull_Unit()

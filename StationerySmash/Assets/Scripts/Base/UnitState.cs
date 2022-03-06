@@ -58,4 +58,13 @@ public class UnitState
         return this;
     }
 
+    public void Set_NextState(UnitState state)
+    {
+        nextState = state;
+    }
+    public void Set_Event(eEvent eEvent)
+    {
+        curEvent = eEvent;
+    }
+
 }
