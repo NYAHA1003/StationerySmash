@@ -70,9 +70,17 @@ public class Unit : MonoBehaviour
     {
         hp -= damage;
     }
-    public virtual void Pull_Unit()
+    public virtual Unit Pull_Unit()
     {
+        //당기 유닛 선택
+        return null;
     }
+    public virtual Unit Pulling_Unit()
+    {
+        //유닛 당기는 중
+        return null;
+    }
+
 
     public virtual void Throw_Unit()
     {

@@ -77,10 +77,25 @@ public class Stationary_Unit : Unit
         unitState.Set_Damaged(atkData);
     }
 
-    public override void Pull_Unit()
+    public override Unit Pull_Unit()
     {
-        battleManager.battle_Camera.Set_CameraIsMove(false);
-        unitState = new Pencil_Pull_State(transform, spr.transform, this);
+        if(unitState.curState == UnitState.eState.DAMAGED)
+        {
+            return null;
+        }
+
+        unitState.Set_Wait(2);
+        return this;
+    }
+
+    public override Unit Pulling_Unit()
+    {
+        if (unitState.curState == UnitState.eState.DAMAGED)
+        {
+            return null;
+        }
+
+        return this;
     }
 
     public override void Throw_Unit()

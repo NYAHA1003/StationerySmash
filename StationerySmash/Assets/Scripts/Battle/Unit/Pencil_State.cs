@@ -310,19 +310,6 @@ public class Pencil_Die_State : Pencil_State
 
 }
 
-public class Pencil_Pull_State : Pencil_State
-{
-    public Pencil_Pull_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
-    {
-        curState = eState.PULL;
-    }
-
-    public override void Enter()
-    {
-        nextState = new Pencil_Pull_State(myTrm, mySprTrm, myUnit);
-    }
-}
-
 public class Pencil_Throw_State : Pencil_State
 {
     public Pencil_Throw_State(Transform myTrm, Transform mySprTrm, Stationary_Unit myUnit) : base(myTrm, mySprTrm, myUnit)
@@ -410,10 +397,10 @@ public class Pencil_Throw_State : Pencil_State
         {
             atkData.Reset_Damage(10);
             targetUnit.Run_Damaged(atkData);
+
             atkData.Reset_Kncockback(20, 0, dir, true);
             atkData.Reset_Type(AtkType.Stun);
             atkData.Reset_Value(1);
-
             myUnit.Run_Damaged(atkData);
             return;
         }

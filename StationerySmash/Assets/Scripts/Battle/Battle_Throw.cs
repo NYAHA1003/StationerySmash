@@ -10,6 +10,8 @@ public class Battle_Throw : BattleCommand
     private Vector2 touch_Origin_Pos;
     private Vector2 direction;
     private float force;
+    private float pullTime;
+
     public Battle_Throw(BattleManager battleManager, LineRenderer parabola, Transform arrow) : base(battleManager)
     {
         this.parabola = parabola;
@@ -33,7 +35,12 @@ public class Battle_Throw : BattleCommand
         {
             if (Vector2.Distance(pos, throw_Unit.transform.position) < 0.1f)
             {
-                throw_Unit.Pull_Unit();
+                throw_Unit = throw_Unit.Pull_Unit();
+                if(throw_Unit == null)
+                {
+                    battleManager.battle_Camera.Set_CameraIsMove(false);
+                }
+                pullTime = 2f;
                 return;
             }
             throw_Unit = null;
@@ -43,8 +50,26 @@ public class Battle_Throw : BattleCommand
 
     public void Draw_Parabola(Vector2 pos)
     {
-        if(throw_Unit != null)
+        if (throw_Unit != null)
         {
+            pullTime -= Time.deltaTime;
+            if(pullTime < 0)
+            {
+                throw_Unit = null;
+                UnDraw_Parabola();
+                return;
+            }    
+
+            throw_Unit = throw_Unit.Pulling_Unit();
+
+            if (throw_Unit == null)
+            {
+                UnDraw_Parabola();
+                return;
+            }
+
+            battleManager.battle_Camera.Set_CameraIsMove(false);
+
             //¹æÇâ
             direction = (Vector2)throw_Unit.transform.position - pos;
             float dir = Mathf.Atan2(direction.y, direction.x);
@@ -52,10 +77,7 @@ public class Battle_Throw : BattleCommand
 
             if(dir < 0)
             {
-                for (int i = 0; i < parabola.positionCount; i++)
-                {
-                    parabola.SetPosition(i, Vector3.zero);
-                }
+                UnDraw_Parabola();
                 return;
             }
 
@@ -79,6 +101,17 @@ public class Battle_Throw : BattleCommand
             {
                 parabola.SetPosition(i, linePos[i]);
             }
+            return;
+        }
+
+        UnDraw_Parabola();
+    }
+
+    public void UnDraw_Parabola()
+    {
+        for (int i = 0; i < parabola.positionCount; i++)
+        {
+            parabola.SetPosition(i, Vector3.zero);
         }
     }
 
@@ -112,6 +145,7 @@ public class Battle_Throw : BattleCommand
         {
             throw_Unit.Throw_Unit();
             throw_Unit = null;
+            UnDraw_Parabola();
         }
     }
 }

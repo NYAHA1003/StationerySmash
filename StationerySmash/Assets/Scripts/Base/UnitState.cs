@@ -16,11 +16,11 @@ public class UnitState
         ENTER, UPDATE, EXIT, NOTHING
     };
 
-    protected eState curState;
-    protected AtkType curStatEff;
-    protected eEvent curEvent;
+    public eState curState { get; protected set; }
+    public AtkType curStatEff { get; protected set; }
+    public eEvent curEvent { get; protected set; }
 
-    protected UnitState nextState;  // 다음 상태
+    public UnitState nextState { get; protected set; }  // 다음 상태
 
     protected Transform myTrm;
     protected Transform mySprTrm;

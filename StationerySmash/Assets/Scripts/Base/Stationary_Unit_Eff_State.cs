@@ -71,8 +71,8 @@ public class Stationary_Unit_Sturn_Eff_State : Stationary_Unit_Eff_State
     }
     public override void Enter()
     {
-        Debug.Log("스턴: " + stunTime);
         stunTime = stunTime + (stunTime * (((float)myUnit.maxhp / (myUnit.hp + 0.1f)) - 1));
+        Debug.Log("스턴: " + stunTime);
         myUnit.unitState.Set_Wait(stunTime);
 
         base.Enter();
@@ -95,6 +95,7 @@ public class Stationary_Unit_Sturn_Eff_State : Stationary_Unit_Eff_State
         {
             stunTime = time;
             stunTime = stunTime + (stunTime * (((float)myUnit.maxhp / (myUnit.hp + 0.1f)) - 1));
+            Debug.Log("스턴: " + stunTime);
         }
     }
 }
