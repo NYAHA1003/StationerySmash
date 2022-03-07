@@ -39,7 +39,7 @@ public class Stationary_Unit : Unit
         }
     }
 
-    public virtual void Set_Stationary_UnitData(UnitData unitData, bool isMyTeam, BattleManager battleManager, int id)
+    public virtual void Set_Stationary_UnitData(UnitData unitData, TeamType eTeam, BattleManager battleManager, int id)
     {
         this.unitData = unitData;
         unitState = new Pencil_Idle_State(transform, spr.transform, this);
@@ -47,9 +47,9 @@ public class Stationary_Unit : Unit
         //딜레이시스템
         attack_Cur_Delay = 0;
         Update_DelayBar(attack_Cur_Delay);
-        delayBar.rectTransform.anchoredPosition = isMyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
+        delayBar.rectTransform.anchoredPosition = eTeam == TeamType.MyTeam ? new Vector2(-960.15f, -540.15f) : new Vector2(-959.85f, -540.15f);
 
-        Set_UnitData(unitData, isMyTeam, battleManager, id);
+        Set_UnitData(unitData, eTeam, battleManager, id);
     }
 
 

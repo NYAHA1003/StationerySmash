@@ -189,8 +189,19 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void Change_Team()
     {
-        battle_Unit.isMyTeam = !battle_Unit.isMyTeam;
-        unit_teamText.text = battle_Unit.isMyTeam ? "³ªÀÇ ÆÀ" : "»ó´ë ÆÀ";
+        if(battle_Unit.eTeam == Utill.TeamType.MyTeam)
+        {
+            battle_Unit.eTeam = Utill.TeamType.EnemyTeam;
+            unit_teamText.text = "ÀûÀÇ ÆÀ";
+            return;
+        }
+        if (battle_Unit.eTeam == Utill.TeamType.EnemyTeam)
+        {
+            battle_Unit.eTeam = Utill.TeamType.MyTeam;
+            unit_teamText.text = "³ªÀÇ ÆÀ";
+            return;
+        }
+
     }
 
     /// <summary>

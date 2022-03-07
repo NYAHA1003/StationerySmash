@@ -11,10 +11,10 @@ public class PencilCase_Unit : Unit
     private void Start()
     {
         battleManager = FindObjectOfType<BattleManager>();
-        Set_PencilCaseData(battleManager.pencilCaseDataSO, isMyTeam, battleManager);
+        Set_PencilCaseData(battleManager.pencilCaseDataSO, eTeam, battleManager);
         Set_Position();
 
-        if (isMyTeam)
+        if (eTeam == TeamType.MyTeam)
         {
             battleManager.battle_Unit.Add_UnitListMy(this);
             return;
@@ -25,7 +25,7 @@ public class PencilCase_Unit : Unit
 
     private void Set_Position()
     {
-        if (isMyTeam)
+        if (eTeam == TeamType.MyTeam)
         {
             transform.position = new Vector2(-battleManager.currentStageData.max_Range, 0);
             return;
@@ -33,12 +33,23 @@ public class PencilCase_Unit : Unit
         transform.position = new Vector2(battleManager.currentStageData.max_Range, 0);
     }
 
-    public void Set_PencilCaseData(PencilCaseDataSO pencilCaseData, bool isMyTeam, BattleManager battleManager)
-    {
+    public void Set_PencilCaseData(PencilCaseDataSO pencilCaseData, TeamType eTeam, BattleManager battleManager)
+    {//팀, 이름 설정
+        this.eTeam = eTeam;
+        transform.name = pencilCaseData.data.unitName + this.eTeam;
+        switch (this.eTeam)
+        {
+            case TeamType.Null:
+                throw new System.Exception("팀 에러");
+            case TeamType.MyTeam:
+                spr.color = Color.red;
+                break;
+            case TeamType.EnemyTeam:
+                spr.color = Color.blue;
+                break;
+        }
+
         this.pencilCaseData = pencilCaseData;
-        transform.name = pencilCaseData.pencilCaseType + (isMyTeam ? "아군" : "적");
-        this.isMyTeam = isMyTeam;
-        spr.color = isMyTeam ? Color.red : Color.blue;
         spr.sprite = pencilCaseData.data.sprite;
         this.battleManager = battleManager;
         hp = pencilCaseData.data.hp;

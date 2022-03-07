@@ -45,7 +45,6 @@ public class PencilCase_Normal_Damaged_State : PencilCase_Normal_State
         curEvent = eEvent.EXIT;
         if(myUnit.hp <= 0)
         {
-            Debug.Log(myUnit.isMyTeam ? "ÆÐ¹è" : "½Â¸®");
             nextState = new PencilCase_Normal_Die_State(myTrm, mySprTrm, myUnit);
             return;
         }

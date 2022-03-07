@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Utill
 {
+    public enum TeamType
+    {
+        Null,
+        MyTeam,
+        EnemyTeam,
+    }
     public enum UnitType
     {
         None,

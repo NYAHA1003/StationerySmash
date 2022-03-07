@@ -1211,6 +1211,7 @@ MonoBehaviour:
   effect_PoolManager: {fileID: 660203832}
   throw_parabola: {fileID: 603366384}
   throw_Arrow: {fileID: 1669006650}
+  ai_isActive: 0
 --- !u!1001 &1660374184
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1265,6 +1266,10 @@ PrefabInstance:
     - target: {fileID: 8336895039923122645, guid: 615f0949729181d4988794308fbfae6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336895039923122647, guid: 615f0949729181d4988794308fbfae6b, type: 3}
+      propertyPath: eTeam
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8336895039923122650, guid: 615f0949729181d4988794308fbfae6b, type: 3}
       propertyPath: m_Name
@@ -1940,6 +1945,10 @@ PrefabInstance:
     - target: {fileID: 8336895039923122645, guid: 615f0949729181d4988794308fbfae6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336895039923122647, guid: 615f0949729181d4988794308fbfae6b, type: 3}
+      propertyPath: eTeam
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8336895039923122647, guid: 615f0949729181d4988794308fbfae6b, type: 3}
       propertyPath: isMyTeam

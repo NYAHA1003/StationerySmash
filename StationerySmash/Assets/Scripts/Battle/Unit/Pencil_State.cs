@@ -94,7 +94,7 @@ public class Pencil_Move_State : Pencil_State
     public override void Update()
     {
         //¿ì¸® ÆÀ
-        if(myUnit.isMyTeam)
+        if(myUnit.eTeam == TeamType.MyTeam)
         {
             Move_MyTeam();
             Check_Range(myUnit.battleManager.unit_EnemyDatasTemp);
@@ -124,11 +124,11 @@ public class Pencil_Move_State : Pencil_State
         {
             if (Vector2.Distance(myTrm.position, list[i].transform.position) < targetRange)
             {
-                if (myUnit.isMyTeam && myTrm.position.x > list[i].transform.position.x)
+                if (myUnit.eTeam == TeamType.MyTeam && myTrm.position.x > list[i].transform.position.x)
                 {
                     continue;
                 }
-                if (!myUnit.isMyTeam && myTrm.position.x < list[i].transform.position.x)
+                if (myUnit.eTeam != TeamType.MyTeam && myTrm.position.x < list[i].transform.position.x)
                 {
                     continue;
                 }
@@ -195,7 +195,7 @@ public class Pencil_Attack_State : Pencil_State
         cur_delay = 0;
         Set_Delay();
         myUnit.battleManager.battle_Effect.Set_Effect(EffectType.Attack, targetUnit.transform.position);
-        AtkData atkData = new AtkData(myUnit, 10, myUnitData.knockback, 0, myUnitData.dir, myUnit.isMyTeam, AtkType.Normal);
+        AtkData atkData = new AtkData(myUnit, 10, myUnitData.knockback, 0, myUnitData.dir, myUnit.eTeam == TeamType.MyTeam, AtkType.Normal);
         targetUnit.Run_Damaged(atkData);
         targetUnit = null;
         nextState = new Pencil_Wait_State(myTrm, mySprTrm, myUnit, 0.4f);
@@ -218,12 +218,12 @@ public class Pencil_Attack_State : Pencil_State
                 return;
             }
 
-            if (myUnit.isMyTeam && myTrm.position.x > targetUnit.transform.position.x)
+            if (myUnit.eTeam == TeamType.MyTeam && myTrm.position.x > targetUnit.transform.position.x)
             {
                 Move();
                 return;
             }
-            if (!myUnit.isMyTeam && myTrm.position.x < targetUnit.transform.position.x)
+            if (myUnit.eTeam != TeamType.MyTeam && myTrm.position.x < targetUnit.transform.position.x)
             {
                 Move();
                 return;
@@ -264,7 +264,7 @@ public class Pencil_Damaged_State : Pencil_State
 
     private void KnockBack()
     {
-        float calculated_knockback = atkData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.isMyTeam);
+        float calculated_knockback = atkData.Caculated_Knockback(myUnitData.weight, myUnit.hp, myUnit.maxhp, myUnit.eTeam == TeamType.MyTeam);
         float height = atkData.baseKnockback * 0.01f + Utill.Utill.Caculated_Height((atkData.baseKnockback + atkData.extraKnockback) * 0.15f, atkData.direction, 1);
         float time = atkData.baseKnockback * 0.005f +  Mathf.Abs((atkData.baseKnockback * 0.5f + atkData.extraKnockback)  / (Physics2D.gravity.y ));
         
@@ -355,7 +355,7 @@ public class Pencil_Throw_State : Pencil_State
 
     public override void Update()
     {
-        if(myUnit.isMyTeam)
+        if(myUnit.eTeam == TeamType.MyTeam)
         {
             Check_Collide(myUnit.battleManager.unit_EnemyDatasTemp);
             return;
